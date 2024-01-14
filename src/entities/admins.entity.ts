@@ -1,5 +1,5 @@
 import { Role } from '@/constants';
-import { Admin } from '@/interfaces/admin.interface';
+import { Admin } from '@/interfaces/admins.interface';
 import { IsNotEmpty } from 'class-validator';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 

@@ -41,11 +41,11 @@ export class UserService extends Repository<UserEntity> {
     return updateUser;
   }
 
-  public async deleteUser(userId: number): Promise<User> {
+  public async deleteUser(userId: string): Promise<User> {
     const findUser: User = await UserEntity.findOne({ where: { id: userId } });
     if (!findUser) throw new HttpException(409, "User doesn't exist");
 
-    await UserEntity.delete({ id: userId });
+    await UserEntity.delete({ uuid: userId });
     return findUser;
   }
 }

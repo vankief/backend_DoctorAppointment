@@ -1,8 +1,15 @@
 import { Role } from '@/constants';
-import { Auth } from '@/interfaces/auth.interface';
-import { AuthUser } from '@/interfaces/authusers.interface';
+import { Auth } from '@/interfaces/auths.interface';
 import { IsNotEmpty } from 'class-validator';
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Unique,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class AuthEntity extends BaseEntity implements Auth {
@@ -19,8 +26,11 @@ export class AuthEntity extends BaseEntity implements Auth {
   password: string;
 
   @Column()
-  userId?: number;
+  userId?: string;
 
-  @Column()
-  role: string;
+  @Column({
+    type: 'enum',
+    enum: Role,
+  })
+  role: Role;
 }

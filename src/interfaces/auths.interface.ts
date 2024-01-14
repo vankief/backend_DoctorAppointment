@@ -1,8 +1,9 @@
 import { Request } from 'express';
 import { User } from '@interfaces/users.interface';
+import { Role } from '@/constants';
 
 export interface DataStoredInToken {
-  userId: number;
+  userId: string;
   role: string;
 }
 
@@ -11,17 +12,31 @@ export interface TokenData {
   expiresIn: number;
 }
 
+export interface Tokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
 export interface RequestWithUser extends Request {
+  req: DataStoredInToken;
   user: Auth;
 }
 export interface Auth {
   email: string;
   password: string;
-  userId?: number;
-  role?: string;
+  userId?: string;
+  role?: Role;
 }
 
 export interface ILoginData {
   email: string;
   password: string;
 }
+export type IGenericResponse<T> = {
+  meta: {
+    page: number | undefined;
+    limit: number | undefined;
+    total: number | undefined;
+  };
+  data: T;
+};

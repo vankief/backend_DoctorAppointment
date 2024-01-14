@@ -1,18 +1,24 @@
-import { compare, hash } from 'bcrypt';
-import { sign } from 'jsonwebtoken';
+import { compare } from 'bcrypt';
 import { Service } from 'typedi';
 import { EntityRepository, Repository } from 'typeorm';
 import { UserEntity } from '@entities/users.entity';
-import { AuthEntity } from '@/entities/auth.entity';
+import { AuthEntity } from '@/entities/auths.entity';
 import { HttpException } from '@/exceptions/httpException';
-import { Auth, DataStoredInToken, ILoginData, TokenData } from '@interfaces/auth.interface';
+import {
+  Auth,
+  DataStoredInToken,
+  ILoginData,
+  TokenData,
+  Tokens,
+} from '@/interfaces/auths.interface';
 import { User } from '@interfaces/users.interface';
-import { Role } from '@/constants';
-import { generateTokens } from '@/utils/createToken';
+import { generateTokens } from '@/utils/generateTokens';
+import { TokensService } from './tokens.service';
 
 @Service()
 @EntityRepository()
 export class AuthService extends Repository<Auth> {
+  tokensService = new TokensService();
   public async login(data: ILoginData): Promise<{
     tokens: {
       accessToken: String;
@@ -30,13 +36,13 @@ export class AuthService extends Repository<Auth> {
       role: findUser.role,
     };
     const tokens = generateTokens(payload);
+    await this.tokensService.saveRefreshToken(findUser.userId, tokens.refreshToken);
     return { tokens, findUser };
   }
 
-  public async logout(userData: User): Promise<User> {
-    const findUser: User = await UserEntity.findOne({ where: { email: userData.email, password: userData.password } });
-    if (!findUser) throw new HttpException(409, "User doesn't exist");
-
-    return findUser;
+  public async logout(refreshToken: string) {
+    const findToken = await this.tokensService.getRefreshToken(refreshToken);
+    if (!findToken) throw new HttpException(409, 'Token not found');
+    await this.tokensService.updateRefreshToken(findToken.userId);
   }
 }

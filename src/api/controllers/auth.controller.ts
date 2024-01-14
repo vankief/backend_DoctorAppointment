@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
-import { Auth, RequestWithUser } from '@interfaces/auth.interface';
+import { Auth, RequestWithUser } from '@/interfaces/auths.interface';
 import { User } from '@interfaces/users.interface';
 import { AuthService } from '@api/services/auth.service';
 import { OK } from '@/helpers/valid_response/success.response';
