@@ -41,7 +41,7 @@ export class DoctorEntity extends BaseEntity implements Doctor {
   biography: string;
 
   @Column() // Giá cho dịch vụ của bác sĩ
-  price: string;
+  price: number;
 
   @Column() // Dịch vụ mà bác sĩ cung cấp
   services: string;

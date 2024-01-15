@@ -14,16 +14,20 @@ export class AuthController {
       new OK({
         message: 'login successfully',
         data: tokens,
-      }).send(req);
+      }).send(res);
     } catch (error) {
       next(error);
     }
   };
 
-  public logOut = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+  public logOut = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
-      const userData: User = req.user;
-      const logOutUserData: User = await this.auth.logout(userData);
+      const userData: Auth = req.user;
+      const logOutUserData: Auth = await this.auth.logout(userData);
 
       res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
       res.status(200).json({ data: logOutUserData, message: 'logout' });

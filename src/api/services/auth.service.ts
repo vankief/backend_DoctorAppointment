@@ -1,17 +1,9 @@
 import { compare } from 'bcrypt';
 import { Service } from 'typedi';
 import { EntityRepository, Repository } from 'typeorm';
-import { UserEntity } from '@entities/users.entity';
 import { AuthEntity } from '@/entities/auths.entity';
 import { HttpException } from '@/exceptions/httpException';
-import {
-  Auth,
-  DataStoredInToken,
-  ILoginData,
-  TokenData,
-  Tokens,
-} from '@/interfaces/auths.interface';
-import { User } from '@interfaces/users.interface';
+import { Auth, DataStoredInToken, ILoginData } from '@/interfaces/auths.interface';
 import { generateTokens } from '@/utils/generateTokens';
 import { TokensService } from './tokens.service';
 

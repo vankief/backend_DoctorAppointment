@@ -14,6 +14,10 @@ export class AdminsRoute implements Routes {
     this.initializeRoutes();
   }
   private initializeRoutes() {
-    this.router.post('/signup', ValidationMiddleware(CreateUserDto), asyncHandler(this.admin.signUp));
+    this.router.post(
+      '/signup',
+      ValidationMiddleware(CreateUserDto),
+      asyncHandler(this.admin.signUp),
+    );
   }
 }

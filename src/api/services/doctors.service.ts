@@ -11,6 +11,7 @@ import {
 } from '@/interfaces/doctors.interface.';
 import { convertDate } from '@/utils';
 import calculatePagination, { IOption } from '@/utils/paginationHelper';
+import pick, { unPick } from '@/utils/pick';
 import { hash } from 'bcrypt';
 import { Service } from 'typedi';
 import { EntityRepository, getManager, getRepository } from 'typeorm';
@@ -53,15 +54,10 @@ export class DoctorsService {
   }
 
   public async updateDoctor(id: string, payload: Partial<Doctor>) {
-    await getManager().transaction(async transactionalEntityManager => {
-      const doctor = await transactionalEntityManager.getRepository(DoctorEntity).findOne(id);
-      if (!doctor) throw new HttpException(409, "Doctor doesn't exist");
-      await transactionalEntityManager.getRepository(DoctorEntity).update(id, payload);
-      await transactionalEntityManager
-        .getRepository(AuthEntity)
-        .update({ userId: id }, { email: payload.email });
-    });
-    return await getRepository(DoctorEntity).findOne(id);
+    const newPayload = unPick(payload, ['id', 'email']);
+    const doctor = await DoctorEntity.findOne(id);
+    if (!doctor) throw new HttpException(409, "Doctor doesn't exist");
+    return await DoctorEntity.update({ id }, newPayload);
   }
 
   public async deleteDoctor(id: string) {

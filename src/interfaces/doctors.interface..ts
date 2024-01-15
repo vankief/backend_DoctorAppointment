@@ -7,7 +7,7 @@ export interface Doctor {
   gender: boolean;
   dob: string;
   biography?: string;
-  price?: string;
+  price?: number;
   services: string; // dịch vụ
   specialization: string; //chuyên khoa
   degree: string; //bằng cấp
@@ -28,7 +28,7 @@ export interface ICreateDoctor {
   gender: boolean;
   dob: string;
   biography?: string;
-  price?: string;
+  price?: number;
   services?: string;
   specialization?: string;
   degree?: string;

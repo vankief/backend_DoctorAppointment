@@ -1,4 +1,9 @@
-import { ACCESS_TOKEN, ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN, REFRESH_TOKEN_EXPIRES_IN } from '@/config';
+import {
+  ACCESS_TOKEN,
+  ACCESS_TOKEN_EXPIRES_IN,
+  REFRESH_TOKEN,
+  REFRESH_TOKEN_EXPIRES_IN,
+} from '@/config';
 import { JwtHelper } from './jwtHelper';
 
 export const generateTokens = (payload: any) => {

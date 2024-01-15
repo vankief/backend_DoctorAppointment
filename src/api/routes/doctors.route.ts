@@ -7,7 +7,7 @@ import { AuthMiddleware } from '@/middlewares/auth.middleware';
 import { DoctorsController } from '../controllers/doctors.controller';
 import { CreateDoctorDto } from '@/dtos/doctors.dto';
 
-export class Doctors implements Routes {
+export class DoctorRouter implements Routes {
   public path = '/doctors';
   public router = Router();
   public doctors = new DoctorsController();
@@ -34,5 +34,6 @@ export class Doctors implements Routes {
       AuthMiddleware([Role.ADMIN]),
       asyncHandler(this.doctors.deleteDoctor),
     );
+    this.router.get(`${this.path}`, asyncHandler(this.doctors.getAllDoctors));
   }
 }
