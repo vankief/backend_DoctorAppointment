@@ -1,5 +1,5 @@
 export interface Admin {
-  id?: number;
+  id?: string;
   email: string;
   phoneNumber: string;
   name: string;

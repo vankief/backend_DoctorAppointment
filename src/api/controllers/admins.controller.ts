@@ -8,4 +8,16 @@ export class AdminController {
     const admin = await this.admin.signUp(req.body);
     new OK({ message: 'Admin created successfully', data: admin }).send(res);
   };
+  public getAdminById = async (req: Request, res: Response): Promise<void> => {
+    const admin = await this.admin.getAdminById(req.params.id);
+    new OK({ message: 'Admin found successfully', data: admin }).send(res);
+  };
+  public updateAdmin = async (req: Request, res: Response): Promise<void> => {
+    const admin = await this.admin.updateAdmin(req.params.id, req.body);
+    new OK({ message: 'Admin updated successfully', data: admin }).send(res);
+  };
+  public deleteAdmin = async (req: Request, res: Response): Promise<void> => {
+    const result = await this.admin.deleteAdmin(req.params.id);
+    new OK({ message: 'Admin deleted successfully', data: result }).send(res);
+  };
 }

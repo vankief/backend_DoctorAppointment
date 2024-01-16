@@ -5,8 +5,8 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from 'type
 
 @Entity()
 export class AdminEntity extends BaseEntity implements Admin {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   @IsNotEmpty()

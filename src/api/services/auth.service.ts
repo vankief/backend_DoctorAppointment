@@ -2,10 +2,10 @@ import { compare } from 'bcrypt';
 import { Service } from 'typedi';
 import { EntityRepository, Repository } from 'typeorm';
 import { AuthEntity } from '@/entities/auths.entity';
-import { HttpException } from '@/exceptions/httpException';
 import { Auth, DataStoredInToken, ILoginData } from '@/interfaces/auths.interface';
 import { generateTokens } from '@/utils/generateTokens';
 import { TokensService } from './tokens.service';
+import { HttpException } from '@/exceptions/httpException';
 
 @Service()
 @EntityRepository()

@@ -3,17 +3,10 @@ import { AdminEntity } from '@/entities/admins.entity';
 import { AuthEntity } from '@/entities/auths.entity';
 import { HttpException } from '@/exceptions/httpException';
 import { Admin, AdminSignUp } from '@/interfaces/admins.interface';
-import { Auth } from '@/interfaces/auths.interface';
+import { unPick } from '@/utils/pick';
 import { hash } from 'bcrypt';
 import { Service } from 'typedi';
-import {
-  EntityManager,
-  EntityRepository,
-  Repository,
-  Transaction,
-  TransactionManager,
-  getManager,
-} from 'typeorm';
+import { EntityRepository, Repository, getManager } from 'typeorm';
 
 @Service()
 @EntityRepository()
@@ -29,12 +22,33 @@ export class AdminService extends Repository<AdminEntity> {
     );
     if (admin) {
       await entityManager.getRepository(AuthEntity).save({
-        email: adminData.email,
+        email: admin.email,
         password: await hash(password, 10),
         userId: admin.id,
         role: Role.ADMIN,
       });
       return { admin };
     }
+  }
+  public async getAdminById(id: string): Promise<Admin> {
+    const admin = await AdminEntity.findOne({ where: { id } });
+    if (!admin) throw new HttpException(404, 'Admin not found');
+    return admin;
+  }
+  public async updateAdmin(id: string, payload: Admin): Promise<Admin> {
+    const newPayload = unPick(payload, ['id', 'email']);
+    const admin = await AdminEntity.findOne({ where: { id } });
+    if (!admin) throw new HttpException(404, 'Admin not found');
+    await AdminEntity.update(id, newPayload);
+    return admin;
+  }
+  public async deleteAdmin(id: string) {
+    const result = getManager().transaction(async transactionalEntityManager => {
+      const admin = await transactionalEntityManager.getRepository(AdminEntity).findOne(id);
+      if (!admin) throw new HttpException(404, 'Admin not found');
+      await transactionalEntityManager.getRepository(AuthEntity).delete({ userId: id });
+      await transactionalEntityManager.getRepository(AdminEntity).delete(id);
+      return result;
+    });
   }
 }

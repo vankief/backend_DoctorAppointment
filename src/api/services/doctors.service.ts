@@ -19,9 +19,6 @@ import { EntityRepository, getManager, getRepository } from 'typeorm';
 @Service()
 @EntityRepository()
 export class DoctorsService {
-  static getAllDoctors(filter: any, options: any) {
-    throw new Error('Method not implemented.');
-  }
   public async createDoctor(payload: ICreateDoctor) {
     const entityManager = getManager();
     const newPayload = {

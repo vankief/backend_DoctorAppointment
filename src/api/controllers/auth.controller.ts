@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { Auth, RequestWithUser } from '@/interfaces/auths.interface';
-import { User } from '@interfaces/users.interface';
 import { AuthService } from '@api/services/auth.service';
 import { OK } from '@/helpers/valid_response/success.response';
 
@@ -26,8 +25,8 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const userData: Auth = req.user;
-      const logOutUserData: Auth = await this.auth.logout(userData);
+      const userData = req.req;
+      const logOutUserData = await this.auth.logout(userData.role);
 
       res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
       res.status(200).json({ data: logOutUserData, message: 'logout' });
