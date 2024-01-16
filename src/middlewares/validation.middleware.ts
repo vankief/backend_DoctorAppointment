@@ -5,11 +5,17 @@ import { HttpException } from '@exceptions/httpException';
 
 /**
  * @name ValidationMiddleware
- * @description Allows use of decorator and non-decorator based validation
+ * @description Middleware thực hiện validate lại object trước khi vào controller
  * @param type dto
- * @param skipMissingProperties When skipping missing properties
- * @param whitelist Even if your object is an instance of a validation class it can contain additional properties that are not defined
- * @param forbidNonWhitelisted If you would rather to have an error thrown when any non-whitelisted properties are present
+ *
+ * @param skipMissingProperties true => Không báo lỗi khi thiếu thuộc tính
+ *                            ||false => Báo lỗi khi thiếu thuộc tính
+ *
+ * @param whitelist true => bỏ qua thuộc tính không được định nghĩa
+ *                ||false => giữ lại các thuộc tính không định nghĩa
+ *
+ * @param forbidNonWhitelisted true => Báo lỗi khi có thuộc tính không định nghĩa
+ *                           ||false => Không báo lỗi khi có thuộc tính không định nghĩa
  */
 export const ValidationMiddleware = (
   type: any,

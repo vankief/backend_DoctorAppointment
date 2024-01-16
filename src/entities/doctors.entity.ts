@@ -13,27 +13,35 @@ import { Doctor } from '@/interfaces/doctors.interface.';
 @Entity()
 export class DoctorEntity extends BaseEntity implements Doctor {
   @PrimaryGeneratedColumn('uuid') // UUID được tạo tự động cho mỗi bản ghi mới
+  @IsNotEmpty()
+  @Unique(['id']) // ID của bác sĩ, phải là duy nhất
   id: string;
 
+  @IsNotEmpty()
   @Column() // Tên của bác sĩ
   name: string;
 
+  @IsNotEmpty()
   @Column()
   @Unique(['email']) // Email của bác sĩ, phải là duy nhất
   email: string;
 
+  @IsNotEmpty()
   @Column() // Địa chỉ của bác sĩ
   address: string;
 
   @Column() // Đường dẫn đến hình ảnh của bác sĩ
   img: string;
 
+  @IsNotEmpty()
   @Column() // Số điện thoại của bác sĩ
   phone: string;
 
+  @IsNotEmpty()
   @Column() // Giới tính của bác sĩ, true có thể đại diện cho nam và false cho nữ
   gender: boolean;
 
+  @IsNotEmpty()
   @Column() // Ngày sinh của bác sĩ
   dob: string;
 

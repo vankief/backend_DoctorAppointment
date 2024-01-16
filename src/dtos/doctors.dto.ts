@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsEmail, IsBoolean, IsString, IsOptional } from 'class-validator';
-import { Unique } from 'typeorm';
 export class CreateDoctorDto {
   @IsNotEmpty()
   @IsString()
@@ -7,7 +6,6 @@ export class CreateDoctorDto {
 
   @IsNotEmpty()
   @IsEmail()
-  @Unique(['email'])
   email: string;
 
   @IsNotEmpty()

@@ -22,6 +22,9 @@ export const ErrorMiddleware = (
       case 404:
         statusResponse = code.NOT_FOUND;
         break;
+      case 409:
+        statusResponse = code.CONFLICT;
+        break;
       case 500:
         statusResponse = code.INTERNAL_SERVER_ERROR;
         break;

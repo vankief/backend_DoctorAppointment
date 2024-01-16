@@ -1,4 +1,3 @@
-import { CreateUserDto } from '@/dtos/users.dto';
 import { Routes } from '@/interfaces/routes.interface';
 import { ValidationMiddleware } from '@/middlewares/validation.middleware';
 import { Router } from 'express';
@@ -6,6 +5,7 @@ import { AdminController } from '@api/controllers/admins.controller';
 import asyncHandler from '@/utils/asyncHandler';
 import { AuthMiddleware } from '@/middlewares/auth.middleware';
 import { Role } from '@/constants';
+import { CreateAdminDto } from '@/dtos/admins.dto';
 
 export class AdminsRoute implements Routes {
   public path = '/admin';
@@ -18,7 +18,7 @@ export class AdminsRoute implements Routes {
   private initializeRoutes() {
     this.router.post(
       `${this.path}/signup`,
-      ValidationMiddleware(CreateUserDto),
+      ValidationMiddleware(CreateAdminDto),
       asyncHandler(this.admin.signUp),
     );
     this.router.get(
@@ -29,6 +29,7 @@ export class AdminsRoute implements Routes {
     this.router.patch(
       `${this.path}/:id`,
       AuthMiddleware([Role.ADMIN]),
+      ValidationMiddleware(CreateAdminDto, true, true),
       asyncHandler(this.admin.updateAdmin),
     );
     this.router.delete(

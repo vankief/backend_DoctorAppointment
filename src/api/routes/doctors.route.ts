@@ -27,7 +27,7 @@ export class DoctorRouter implements Routes {
     this.router.patch(
       `${this.path}/:id`,
       AuthMiddleware([Role.ADMIN]),
-      ValidationMiddleware(CreateDoctorDto, true),
+      ValidationMiddleware(CreateDoctorDto, true, true),
       asyncHandler(this.doctors.updateDoctor),
     );
     this.router.delete(

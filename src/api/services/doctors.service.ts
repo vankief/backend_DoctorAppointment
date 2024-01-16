@@ -14,7 +14,7 @@ import calculatePagination, { IOption } from '@/utils/paginationHelper';
 import pick, { unPick } from '@/utils/pick';
 import { hash } from 'bcrypt';
 import { Service } from 'typedi';
-import { EntityRepository, getManager, getRepository } from 'typeorm';
+import { EntityRepository, getManager } from 'typeorm';
 
 @Service()
 @EntityRepository()
