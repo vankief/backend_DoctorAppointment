@@ -16,6 +16,9 @@ export class AdminService extends Repository<AdminEntity> {
   }> {
     const entityManager = getManager();
     const { password, ...adminData } = payload;
+    // check email is exist
+    const isExist = AuthEntity.findOne({ email: adminData.email });
+    if (isExist) throw new HttpException(409, 'Email already exist');
     const admin = await entityManager.transaction(
       async transactionalEntityManager =>
         await transactionalEntityManager.getRepository(AdminEntity).save({ ...adminData }),

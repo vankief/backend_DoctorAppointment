@@ -5,7 +5,7 @@ import { AuthEntity } from '@/entities/auths.entity';
 import { Auth, DataStoredInToken, ILoginData } from '@/interfaces/auths.interface';
 import { generateTokens } from '@/utils/generateTokens';
 import { TokensService } from './tokens.service';
-import { HttpException } from '@/exceptions/httpException';
+import { HttpException } from '@/helpers/exceptions/httpException';
 
 @Service()
 @EntityRepository()

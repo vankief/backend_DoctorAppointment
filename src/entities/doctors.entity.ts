@@ -7,8 +7,10 @@ import {
   Unique,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Doctor } from '@/interfaces/doctors.interface.';
+import { DoctorTimeSlotEntity } from './doctorTimeSlots.entity';
 
 @Entity()
 export class DoctorEntity extends BaseEntity implements Doctor {
@@ -80,6 +82,9 @@ export class DoctorEntity extends BaseEntity implements Doctor {
 
   @Column() // Có thể là năm bắt đầu hành nghề hoặc năm đăng ký hành nghề
   year: string;
+
+  @OneToMany(() => DoctorTimeSlotEntity, doctorTimeSlot => doctorTimeSlot.doctor)
+  timeSlots: DoctorTimeSlotEntity[];
 
   @Column()
   @CreateDateColumn() // Ngày tạo bản ghi

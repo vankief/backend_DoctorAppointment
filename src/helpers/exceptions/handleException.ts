@@ -5,10 +5,6 @@ import { logger } from '@/utils/logger';
 
 const handleException = (error: any, next: NextFunction) => {
   try {
-    // log(error);
-    console.log(error);
-    console.log(error instanceof Error);
-    console.log(error instanceof HttpException);
     if (error instanceof HttpException) {
       throw error;
     } else {

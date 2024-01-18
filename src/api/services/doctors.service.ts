@@ -1,7 +1,7 @@
 import { Role } from '@/constants';
 import { AuthEntity } from '@/entities/auths.entity';
 import { DoctorEntity } from '@/entities/doctors.entity';
-import { HttpException } from '@/exceptions/httpException';
+import { HttpException } from '@/helpers/exceptions/httpException';
 import { IGenericResponse } from '@/interfaces/auths.interface';
 import {
   Doctor,
@@ -11,7 +11,7 @@ import {
 } from '@/interfaces/doctors.interface.';
 import { convertDate } from '@/utils';
 import calculatePagination, { IOption } from '@/utils/paginationHelper';
-import pick, { unPick } from '@/utils/pick';
+import { unPick } from '@/utils/pick';
 import { hash } from 'bcrypt';
 import { Service } from 'typedi';
 import { EntityRepository, getManager } from 'typeorm';

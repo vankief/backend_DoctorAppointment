@@ -2,8 +2,8 @@ import { hash } from 'bcrypt';
 import { EntityRepository, Repository } from 'typeorm';
 import { Service } from 'typedi';
 import { UserEntity } from '@entities/users.entity';
-import { HttpException } from '@/exceptions/httpException';
 import { User } from '@interfaces/users.interface';
+import { HttpException } from '@/helpers/exceptions/httpException';
 
 @Service()
 @EntityRepository()
@@ -25,7 +25,10 @@ export class UserService extends Repository<UserEntity> {
     if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
 
     const hashedPassword = await hash(userData.password, 10);
-    const createUserData: User = await UserEntity.create({ ...userData, password: hashedPassword }).save();
+    const createUserData: User = await UserEntity.create({
+      ...userData,
+      password: hashedPassword,
+    }).save();
 
     return createUserData;
   }

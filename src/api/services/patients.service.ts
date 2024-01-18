@@ -1,7 +1,7 @@
 import { Role } from '@/constants';
 import { AuthEntity } from '@/entities/auths.entity';
 import { PatientEntity } from '@/entities/patient.entity';
-import { HttpException } from '@/exceptions/httpException';
+import { HttpException } from '@/helpers/exceptions/httpException';
 import { ICreatePatient, Patient } from '@/interfaces/patients.interface';
 import { unPick } from '@/utils/pick';
 import { hash } from 'bcrypt';
@@ -13,27 +13,23 @@ export class PatientService {
   public async signup(payload: ICreatePatient) {
     const entityManager = getManager();
     const { password, ...patientData } = payload;
-
-    const isPatientCreated = await entityManager.getRepository(AuthEntity).findOne({
-      where: { email: patientData.email },
-    });
-    if (isPatientCreated) throw new HttpException(409, 'Patient already exists');
-
-    let patient;
-    try {
-      await entityManager.transaction(async transactionalEntityManager => {
-        patient = await transactionalEntityManager.getRepository(PatientEntity).save(patientData);
-        await transactionalEntityManager.getRepository(AuthEntity).save({
-          email: patient.email,
-          password: await hash(password, 10),
-          userId: patient.id,
-          role: Role.PATIENT,
-        });
-      });
-    } catch (error) {
-      throw new HttpException(409, 'Cannot save patient');
+    console.log('🚀 ~ PatientService ~ signup ~ patientData:', patientData);
+    const isPatientCreated = await AuthEntity.findOne({ where: { email: patientData.email } });
+    if (isPatientCreated) {
+      throw new HttpException(409, 'Patient already exists');
     }
-
+    const patient = await entityManager.transaction(
+      async transactionalEntityManager =>
+        await transactionalEntityManager.getRepository(PatientEntity).save(patientData),
+    );
+    if (patient) {
+      await entityManager.getRepository(AuthEntity).save({
+        email: patient.email,
+        password: await hash(password, 10),
+        userId: patient.id,
+        role: Role.PATIENT,
+      });
+    }
     return patient;
   }
   public async updatePatient(id: string, payload: Partial<Patient>) {

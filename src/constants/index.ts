@@ -3,3 +3,12 @@ export enum Role {
   PATIENT = 'patient',
   DOCTOR = 'doctor',
 }
+export enum Day {
+  Saturday = 'Saturday',
+  Sunday = 'Sunday',
+  Monday = 'Monday',
+  Tuesday = 'Tuesday',
+  Wednesday = 'Wednesday',
+  Thursday = 'Thursday',
+  Friday = 'Friday',
+}

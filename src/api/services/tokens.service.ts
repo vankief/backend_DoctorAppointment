@@ -1,6 +1,6 @@
 import { TokenStoredEntity } from '@/entities/tokenStore.entity';
-import { Service, Token } from 'typedi';
-import { EntityRepository, getManager } from 'typeorm';
+import { Service } from 'typedi';
+import { EntityRepository } from 'typeorm';
 @Service()
 @EntityRepository()
 export class TokensService {

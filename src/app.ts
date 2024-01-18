@@ -37,7 +37,6 @@ export class App {
       logger.info(`======= ENV: ${this.env} =======`);
       logger.info(`🚀 App listening on the port ${this.port}`);
       logger.info(`=================================`);
-      logger.info(`ConnectDatabase: ${this.env} ====`);
     });
   }
 
@@ -47,6 +46,7 @@ export class App {
 
   private async connectToDatabase() {
     await dbConnection();
+    logger.info('🚀 Connect to database successfully');
   }
 
   private initializeMiddlewares() {

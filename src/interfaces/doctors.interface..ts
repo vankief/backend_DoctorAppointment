@@ -1,3 +1,6 @@
+import { DoctorEntity } from '@/entities/doctors.entity';
+import { ScheduleDayEntity } from '@/entities/scheduleDay.entity';
+
 export interface Doctor {
   name: string;
   email: string;
@@ -39,6 +42,25 @@ export interface ICreateDoctor {
   awards?: string;
   registration?: string;
   year?: string;
+}
+export interface ICreateTimeSlot {
+  doctorId: string;
+  day: Date;
+  timeSlot: ScheduleDayEntity[];
+  maximumPatient: number;
+}
+export interface IUpdateTimeSlot {
+  doctorId: string;
+  day: Date;
+  timeSlotToAdd: ScheduleDayEntity[];
+  maximumPatient?: number;
+}
+export interface DoctorTimeSlot {
+  id?: number;
+  doctor: DoctorEntity;
+  day: Date;
+  timeSlot: ScheduleDayEntity[];
+  maximumPatient?: number;
 }
 export type IDoctorFilters = {
   searchTerm?: string;
