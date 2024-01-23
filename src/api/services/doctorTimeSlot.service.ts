@@ -8,12 +8,13 @@ import _ from 'lodash';
 import moment from 'moment';
 import { ScheduleDay } from '@/entities/scheduleDay.entity';
 import { ListTime } from '@/constants';
+import DoctorTimeSlotRepo from '@/entities/repo/doctorTimeSlot.repo';
 
 @Service()
 @EntityRepository()
 export class DoctorTimeSlotService {
   public async createOrUpdateDoctorTimeSlot(data: ICreateTimeSlot) {
-    const { doctorId, day, listTime, maximumPatient } = data;
+    const { doctorId, day, listTime } = data;
     const doctor = await DoctorEntity.findOne({ id: doctorId });
     const dayString = moment(day).format('YYYY-MM-DD');
     const isCreate = await DoctorTimeSlotEntity.findOne({
@@ -25,29 +26,11 @@ export class DoctorTimeSlotService {
     });
 
     if (!isCreate) {
-      const newDoctorTimeSlot = DoctorTimeSlotEntity.create({
-        doctor: doctor,
-        day: dayString,
-        maximumPatient: maximumPatient,
+      return DoctorTimeSlotRepo.createDoctorTimeSlot({
+        doctor,
+        dayString,
+        listTime,
       });
-
-      const scheduleDays = listTime.map(item => {
-        const scheduleDay = ScheduleDay.create({
-          timeSlot: ListTime[item.timeSlot],
-          isPublic: item.isPublic,
-          doctorTimeSlot: newDoctorTimeSlot, // Liên kết với DoctorTimeSlotEntity
-        });
-        return scheduleDay;
-      });
-
-      newDoctorTimeSlot.listTime = scheduleDays;
-
-      // Lưu DoctorTimeSlotEntity và liên kết ScheduleDay
-      await newDoctorTimeSlot.save();
-      const doctorTimeSlotId = newDoctorTimeSlot.id;
-      await this.saveScheduleDays(scheduleDays, doctorTimeSlotId);
-
-      return newDoctorTimeSlot;
     } else {
       const listTimeInDB = isCreate.listTime;
       const differences = _.differenceWith(listTimeInDB, listTime, _.isEqual);
@@ -81,15 +64,7 @@ export class DoctorTimeSlotService {
       }
     }
   }
-  async saveScheduleDays(scheduleDays: ScheduleDay[], doctorTimeSlotId): Promise<void> {
-    const scheduleDayRepository = getRepository(ScheduleDay);
-    await Promise.all(
-      scheduleDays.map(async scheduleDay => {
-        scheduleDay.doctorTimeSlot = doctorTimeSlotId; // Đặt giá trị doctorTimeSlotId
-        await scheduleDayRepository.save(scheduleDay);
-      }),
-    );
-  }
+
   public async deleteDoctorTimeSlot(id: number) {
     const isCreate = DoctorTimeSlotEntity.findOne(id);
     if (!isCreate) {

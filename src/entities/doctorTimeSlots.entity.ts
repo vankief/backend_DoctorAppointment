@@ -28,9 +28,6 @@ export class DoctorTimeSlotEntity extends BaseEntity implements DoctorTimeSlot {
   @OneToMany(() => ScheduleDay, scheduleDay => scheduleDay.doctorTimeSlot, { eager: true })
   listTime: ScheduleDay[];
 
-  @Column({ nullable: true })
-  maximumPatient: number;
-
   @CreateDateColumn()
   createdAt: Date;
 

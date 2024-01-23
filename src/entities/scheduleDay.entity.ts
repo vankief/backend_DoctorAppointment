@@ -17,6 +17,9 @@ export class ScheduleDay extends BaseEntity {
   })
   timeSlot: ListTime;
 
+  @Column({ nullable: true })
+  maximumPatient: number;
+
   @Column({ default: false })
   isPublic: boolean;
 

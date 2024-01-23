@@ -43,11 +43,16 @@ export interface ICreateDoctor {
   registration?: string;
   year?: string;
 }
+
+export interface IListTime {
+  timeSlot: string;
+  maximumPatient: number;
+}
+
 export interface ICreateTimeSlot {
   doctorId: string;
   day: string;
-  listTime: ScheduleDay[];
-  maximumPatient: number;
+  listTime: IListTime[];
 }
 export interface IUpdateTimeSlot {
   doctorId: string;
