@@ -36,6 +36,6 @@
       "@api/*": ["api/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.json", ".env", "src/utils/index.ts", "src/utils/pick.ts"],
+  "include": ["src/**/*.ts", "src/**/*.json", ".env", "src/utils/index.js", "src/utils/pick.ts"],
   "exclude": ["node_modules", "src/http", "src/logs"]
 }

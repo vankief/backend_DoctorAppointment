@@ -4,13 +4,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ScheduleDayEntity } from './scheduleDay.entity';
 import { DoctorTimeSlot } from '@/interfaces/doctors.interface.';
+import { ScheduleDay } from './scheduleDay.entity';
 
 @Entity()
 export class DoctorTimeSlotEntity extends BaseEntity implements DoctorTimeSlot {
@@ -18,13 +19,14 @@ export class DoctorTimeSlotEntity extends BaseEntity implements DoctorTimeSlot {
   id: number;
 
   @ManyToOne(() => DoctorEntity, doctor => doctor.timeSlots)
+  @JoinColumn({ name: 'doctorId' })
   doctor: DoctorEntity; // And here
 
   @Column()
-  day: Date;
+  day: string;
 
-  @OneToMany(() => ScheduleDayEntity, scheduleDay => scheduleDay.doctorTimeSlot)
-  timeSlot: ScheduleDayEntity[];
+  @OneToMany(() => ScheduleDay, scheduleDay => scheduleDay.doctorTimeSlot, { eager: true })
+  listTime: ScheduleDay[];
 
   @Column({ nullable: true })
   maximumPatient: number;

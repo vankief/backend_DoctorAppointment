@@ -1,4 +1,12 @@
-import { IsNotEmpty, IsEmail, IsBoolean, IsString, IsOptional } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsEmail,
+  IsBoolean,
+  IsString,
+  IsOptional,
+  IsDateString,
+  IsNumber,
+} from 'class-validator';
 export class CreateDoctorDto {
   @IsNotEmpty()
   @IsString()
@@ -25,7 +33,7 @@ export class CreateDoctorDto {
   gender: boolean;
 
   @IsNotEmpty()
-  @IsString()
+  @IsDateString()
   dob: string;
 
   @IsOptional()
@@ -33,8 +41,8 @@ export class CreateDoctorDto {
   biography?: string;
 
   @IsOptional()
-  @IsString()
-  price?: string;
+  @IsNumber()
+  price?: number;
 
   @IsOptional()
   @IsString()

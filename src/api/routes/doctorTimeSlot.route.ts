@@ -18,22 +18,34 @@ export class DoctorTimeSlotRoute implements Routes {
 
   private initializeRoutes() {
     this.router.post(
-      `${this.path}/create`,
+      `${this.path}/subscribe`,
       AuthMiddleware([Role.DOCTOR]),
       ValidationMiddleware(DoctorTimeSlotDTO, true, false, true),
-      asyncHandler(this.doctorTimeSlot.createDoctorTimeSlot),
+      asyncHandler(this.doctorTimeSlot.createOrUpdateDoctorTimeSlot),
     );
-    this.router.get(`${this.path}`, asyncHandler(this.doctorTimeSlot.getTimeSlots));
-    this.router.get(`${this.path}/:id`, asyncHandler(this.doctorTimeSlot.getDoctorTimeSlotById));
-    this.router.delete(`${this.path}/:id`, this.doctorTimeSlot.deleteDoctorTimeSlot);
-    this.router.patch(
+    this.router.delete(
       `${this.path}/:id`,
       AuthMiddleware([Role.DOCTOR]),
-      this.doctorTimeSlot.updateDoctorTimeSlot,
+      this.doctorTimeSlot.deleteDoctorTimeSlot,
+    );
+    this.router.post(
+      `${this.path}/change-doctor-time-slot-status/:id`,
+      AuthMiddleware([Role.ADMIN]),
+      this.doctorTimeSlot.changeDoctorTimeSlot,
+    );
+    this.router.get(
+      `${this.path}/all`,
+      AuthMiddleware([Role.ADMIN]),
+      asyncHandler(this.doctorTimeSlot.getAllTimeSlot),
     );
     this.router.get(
       `${this.path}/appointment-time/:id`,
       this.doctorTimeSlot.getAppointmentTimeOfEachDoctor,
+    );
+    this.router.get(
+      `${this.path}/my-time-slot/`,
+      AuthMiddleware([Role.DOCTOR]),
+      this.doctorTimeSlot.getMyTimeSlot,
     );
   }
 }

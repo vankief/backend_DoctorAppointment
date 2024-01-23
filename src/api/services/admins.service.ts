@@ -1,7 +1,7 @@
 import { Role } from '@/constants';
 import { AdminEntity } from '@/entities/admins.entity';
 import { AuthEntity } from '@/entities/auths.entity';
-import { HttpException } from '@/exceptions/httpException';
+import { HttpException } from '@/helpers/exceptions/httpException';
 import { Admin, AdminSignUp } from '@/interfaces/admins.interface';
 import { unPick } from '@/utils/pick';
 import { hash } from 'bcrypt';
@@ -11,13 +11,11 @@ import { EntityRepository, Repository, getManager } from 'typeorm';
 @Service()
 @EntityRepository()
 export class AdminService extends Repository<AdminEntity> {
-  public async signUp(payload: AdminSignUp): Promise<{
-    admin: Admin;
-  }> {
+  public async signUp(payload: AdminSignUp) {
     const entityManager = getManager();
     const { password, ...adminData } = payload;
     // check email is exist
-    const isExist = AuthEntity.findOne({ email: adminData.email });
+    const isExist = await AuthEntity.findOne({ email: adminData.email });
     if (isExist) throw new HttpException(409, 'Email already exist');
     const admin = await entityManager.transaction(
       async transactionalEntityManager =>
@@ -30,20 +28,19 @@ export class AdminService extends Repository<AdminEntity> {
         userId: admin.id,
         role: Role.ADMIN,
       });
-      return { admin };
     }
+    return admin;
   }
-  public async getAdminById(id: string): Promise<Admin> {
+  public async getAdminById(id: string) {
     const admin = await AdminEntity.findOne({ where: { id } });
     if (!admin) throw new HttpException(404, 'Admin not found');
     return admin;
   }
-  public async updateAdmin(id: string, payload: Admin): Promise<Admin> {
+  public async updateAdmin(id: string, payload: Admin) {
     const newPayload = unPick(payload, ['id', 'email']);
     const admin = await AdminEntity.findOne({ where: { id } });
     if (!admin) throw new HttpException(404, 'Admin not found');
-    await AdminEntity.update(id, newPayload);
-    return admin;
+    return await AdminEntity.update(id, newPayload);
   }
   public async deleteAdmin(id: string) {
     const result = getManager().transaction(async transactionalEntityManager => {

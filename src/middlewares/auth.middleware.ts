@@ -1,9 +1,9 @@
 import { NextFunction, Response } from 'express';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '@config';
-import { HttpException } from '@/exceptions/httpException';
+import { ACCESS_TOKEN } from '@config';
 import { DataStoredInToken, RequestWithUser } from '@/interfaces/auths.interface';
 import { JwtHelper } from '@/utils/jwtHelper';
 import { AuthEntity } from '@/entities/auths.entity';
+import { HttpException } from '@/helpers/exceptions/httpException';
 
 const getAuthorization = req => {
   const header = req.header('Authorization');

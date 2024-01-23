@@ -13,6 +13,7 @@ import { convertDate } from '@/utils';
 import calculatePagination, { IOption } from '@/utils/paginationHelper';
 import { unPick } from '@/utils/pick';
 import { hash } from 'bcrypt';
+import moment from 'moment';
 import { Service } from 'typedi';
 import { EntityRepository, getManager } from 'typeorm';
 
@@ -37,7 +38,9 @@ export class DoctorsService {
       async transactionalEntityManager =>
         await transactionalEntityManager.getRepository(DoctorEntity).save(newPayload),
     );
+    console.log('abc', moment(payload.dob).format('DD-MM-YYYY'));
 
+    //moment(a, 'DD-MM-YYYY');
     const password = convertDate(new Date(payload.dob));
     if (doctor) {
       await entityManager.getRepository(AuthEntity).save({
