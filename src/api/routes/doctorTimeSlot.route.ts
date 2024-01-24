@@ -26,12 +26,12 @@ export class DoctorTimeSlotRoute implements Routes {
     this.router.delete(
       `${this.path}/:id`,
       AuthMiddleware([Role.DOCTOR]),
-      this.doctorTimeSlot.deleteDoctorTimeSlot,
+      asyncHandler(this.doctorTimeSlot.deleteDoctorTimeSlot),
     );
     this.router.post(
       `${this.path}/change-doctor-time-slot-status/:id`,
       AuthMiddleware([Role.ADMIN]),
-      this.doctorTimeSlot.changeDoctorTimeSlot,
+      asyncHandler(this.doctorTimeSlot.changeDoctorTimeSlot),
     );
     this.router.get(
       `${this.path}/all`,
@@ -40,12 +40,12 @@ export class DoctorTimeSlotRoute implements Routes {
     );
     this.router.get(
       `${this.path}/appointment-time/:id`,
-      this.doctorTimeSlot.getAppointmentTimeOfEachDoctor,
+      asyncHandler(this.doctorTimeSlot.getAppointmentTimeOfEachDoctor),
     );
     this.router.get(
       `${this.path}/my-time-slot/`,
       AuthMiddleware([Role.DOCTOR]),
-      this.doctorTimeSlot.getMyTimeSlot,
+      asyncHandler(this.doctorTimeSlot.getMyTimeSlot),
     );
   }
 }

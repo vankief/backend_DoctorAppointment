@@ -1,6 +1,15 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { DoctorTimeSlotEntity } from './doctorTimeSlots.entity';
-import { ListTime } from '@/constants';
+import { EListTime } from '@/constants';
 
 @Entity()
 export class ScheduleDay extends BaseEntity {
@@ -13,22 +22,19 @@ export class ScheduleDay extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: ListTime,
+    enum: EListTime,
   })
-  timeSlot: ListTime;
+  timeSlot: EListTime;
 
-  @Column({ nullable: true })
+  @Column()
   maximumPatient: number;
 
   @Column({ default: false })
   isPublic: boolean;
 
-  @Column()
-  doctorId: string;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column()
-  CreatedAt: Date;
-
-  @Column()
-  UpdatedAt: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

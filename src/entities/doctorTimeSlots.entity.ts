@@ -25,7 +25,10 @@ export class DoctorTimeSlotEntity extends BaseEntity implements DoctorTimeSlot {
   @Column()
   day: string;
 
-  @OneToMany(() => ScheduleDay, scheduleDay => scheduleDay.doctorTimeSlot, { eager: true })
+  @OneToMany(() => ScheduleDay, scheduleDay => scheduleDay.doctorTimeSlot, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   listTime: ScheduleDay[];
 
   @CreateDateColumn()

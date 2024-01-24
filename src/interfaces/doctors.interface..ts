@@ -46,6 +46,7 @@ export interface ICreateDoctor {
 
 export interface IListTime {
   timeSlot: string;
+  isPublic: boolean;
   maximumPatient: number;
 }
 
@@ -53,13 +54,6 @@ export interface ICreateTimeSlot {
   doctorId: string;
   day: string;
   listTime: IListTime[];
-}
-export interface IUpdateTimeSlot {
-  doctorId: string;
-  day: string;
-  listTimeToAdd: ScheduleDay[];
-  maximumPatient?: number;
-  isPublic?: boolean;
 }
 export interface DoctorTimeSlot {
   id?: number;
