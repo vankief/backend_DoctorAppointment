@@ -46,7 +46,6 @@ export interface ICreateDoctor {
 
 export interface IListTime {
   timeSlot: string;
-  isPublic: boolean;
   maximumPatient: number;
 }
 
@@ -59,8 +58,8 @@ export interface DoctorTimeSlot {
   id?: number;
   doctor: DoctorEntity;
   day: string;
+  isPublic: boolean;
   listTime: ScheduleDay[];
-  maximumPatient?: number;
 }
 export type IDoctorFilters = {
   searchTerm?: string;

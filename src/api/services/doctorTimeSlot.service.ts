@@ -29,6 +29,8 @@ export class DoctorTimeSlotService {
         dayString,
         listTime,
       });
+    } else if (isCreate.isPublic == true) {
+      throw new HttpException(400, "Can't update public time slot");
     } else {
       return DoctorTimeSlotRepo.updateDoctorTimeSlot(isCreate, listTime);
     }
@@ -38,16 +40,18 @@ export class DoctorTimeSlotService {
     const isCreate = await DoctorTimeSlotEntity.findOne(id);
     if (!isCreate) {
       throw new HttpException(400, 'DoctorTimeSlot not found');
+    } else if (isCreate.isPublic) {
+      throw new HttpException(400, "Can't delete public time slot");
     } else {
       return DoctorTimeSlotRepo.deleteDoctorTimeSlot(id);
     }
   }
-  public async changeDoctorTimeSlot(isPublic: boolean, timeSlotId: number, id: number) {
+  public async changeDoctorTimeSlot(isPublic: boolean, id: number) {
     const doctorTimeSlot = await DoctorTimeSlotEntity.findOne(id);
     if (!doctorTimeSlot) {
       throw new HttpException(400, 'DoctorTimeSlot not found');
     } else {
-      return DoctorTimeSlotRepo.changeDoctorTimeSlot(isPublic, timeSlotId, id);
+      return DoctorTimeSlotRepo.changeDoctorTimeSlot(isPublic, id);
     }
   }
   public async getAllTimeSlot() {

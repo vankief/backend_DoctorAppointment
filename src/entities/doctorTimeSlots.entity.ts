@@ -25,6 +25,9 @@ export class DoctorTimeSlotEntity extends BaseEntity implements DoctorTimeSlot {
   @Column()
   day: string;
 
+  @Column({ default: false })
+  isPublic: boolean;
+
   @OneToMany(() => ScheduleDay, scheduleDay => scheduleDay.doctorTimeSlot, {
     cascade: true,
     onDelete: 'CASCADE',

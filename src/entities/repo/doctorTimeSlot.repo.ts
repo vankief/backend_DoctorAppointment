@@ -3,7 +3,7 @@ import { DoctorTimeSlotEntity } from '../doctorTimeSlots.entity';
 import { ScheduleDay } from '../scheduleDay.entity';
 import { EListTime } from '@/constants';
 import { DoctorEntity } from '../doctors.entity';
-import _ from 'lodash';
+import _, { forEach } from 'lodash';
 
 interface ICreateTimeSlotRepo {
   doctor: DoctorEntity;
@@ -17,7 +17,6 @@ export default class DoctorTimeSlotRepo {
       listTime.map(async item => {
         const scheduleDay = ScheduleDay.create({
           timeSlot: EListTime[item.timeSlot],
-          isPublic: false,
           maximumPatient: item.maximumPatient,
         });
         return await scheduleDay.save();
@@ -28,41 +27,38 @@ export default class DoctorTimeSlotRepo {
     newDoctorTimeSlot.doctor = doctor;
     newDoctorTimeSlot.day = dayString;
     newDoctorTimeSlot.listTime = scheduleDays;
+    newDoctorTimeSlot.isPublic = false;
 
     await newDoctorTimeSlot.save();
 
     return newDoctorTimeSlot;
   }
+
   public static async updateDoctorTimeSlot(isCreate: DoctorTimeSlotEntity, listTime: IListTime[]) {
-    const listTimeInDB = isCreate.listTime;
-    const listTimeCompare = listTimeInDB.map(item => {
-      return {
-        timeSlot: item.timeSlot,
-        isPublic: item.isPublic,
-        maximumPatient: item.maximumPatient,
-      };
-    });
-    const differences = _.differenceWith(listTimeCompare, listTime, _.isEqual);
-    if (differences.length === 0) {
-      return isCreate;
-    } else {
-      // Remove existing ScheduleDay entities
-      await ScheduleDay.remove(isCreate.listTime);
-      isCreate.listTime = await Promise.all(
-        listTime.map(async item => {
-          const scheduleDay = ScheduleDay.create({
+    const scheduleDays = await Promise.all(
+      listTime.map(async item => {
+        let scheduleDay = await ScheduleDay.findOne({
+          where: {
+            doctorTimeSlot: isCreate.id,
             timeSlot: EListTime[item.timeSlot],
-            isPublic: false,
+          },
+        });
+        if (!scheduleDay) {
+          scheduleDay = ScheduleDay.create({
+            timeSlot: EListTime[item.timeSlot],
             maximumPatient: item.maximumPatient,
           });
-
-          return await scheduleDay.save();
-        }),
-      );
-      const result = await DoctorTimeSlotEntity.save(isCreate);
-      return result;
-    }
+        } else {
+          scheduleDay.maximumPatient = item.maximumPatient;
+        }
+        return await scheduleDay.save();
+      }),
+    );
+    isCreate.listTime = scheduleDays;
+    await isCreate.save();
+    return isCreate;
   }
+
   public static async deleteDoctorTimeSlot(id: number) {
     await ScheduleDay.createQueryBuilder()
       .delete()
@@ -70,17 +66,19 @@ export default class DoctorTimeSlotRepo {
       .execute();
     return await DoctorTimeSlotEntity.delete(id);
   }
-  public static async changeDoctorTimeSlot(isPublic: boolean, timeSlotId: number, id: number) {
-    await ScheduleDay.createQueryBuilder()
+
+  public static async changeDoctorTimeSlot(isPublic: boolean, id: number) {
+    await DoctorTimeSlotEntity.createQueryBuilder()
       .update()
       .set({ isPublic })
-      .where('id = :timeSlotId', { timeSlotId })
+      .where('id = :id', { id })
       .execute();
     const result = await DoctorTimeSlotEntity.findOne(id, {
       relations: ['listTime'],
     });
     return result;
   }
+
   public static async getAppointmentTimeOfEachDoctor(doctorId: string, filter: any) {
     const doctorTimeSlots = await DoctorTimeSlotEntity.find({
       where: {
@@ -116,6 +114,7 @@ export default class DoctorTimeSlotRepo {
       return result;
     }
   }
+
   public static async getMyTimeSlot(doctorId: string) {
     const doctorTimeSlots = await DoctorTimeSlotEntity.find({
       where: {

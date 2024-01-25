@@ -27,16 +27,11 @@ export class DoctorTimeSlotController {
   };
   public changeDoctorTimeSlot = async (req: RequestWithUser, res: Response) => {
     const timeSlotId = req.query.timeSlotId;
-    console.log('🚀 ~ DoctorTimeSlotController ~ changeDoctorTimeSlot= ~ timeSlotId:', timeSlotId);
     const { isPublic } = req.body;
     const doctorTimeSlot = await this.doctorTimeSlot.changeDoctorTimeSlot(
       isPublic,
       Number(timeSlotId),
       Number(req.params.id),
-    );
-    console.log(
-      '🚀 ~ DoctorTimeSlotController ~ changeDoctorTimeSlot= ~ doctorTimeSlot:',
-      doctorTimeSlot,
     );
     new OK({
       message: 'DoctorTimeSlot changed successfully',

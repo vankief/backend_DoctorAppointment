@@ -29,9 +29,6 @@ export class ScheduleDay extends BaseEntity {
   @Column()
   maximumPatient: number;
 
-  @Column({ default: false })
-  isPublic: boolean;
-
   @CreateDateColumn()
   createdAt: Date;
 
