@@ -32,12 +32,14 @@ export class PatientService {
     }
     return patient;
   }
+
   public async updatePatient(id: string, payload: Partial<Patient>) {
     const newPayload = unPick(payload, ['id', 'email']);
     const patient = await PatientEntity.findOne(id);
     if (!patient) throw new HttpException(409, "Patient doesn't exist");
     return await PatientEntity.update({ id }, newPayload);
   }
+
   public async deletePatient(patientId: string) {
     const result = await getManager().transaction(async transactionalEntityManager => {
       const patient = await transactionalEntityManager
@@ -49,6 +51,7 @@ export class PatientService {
     });
     return result;
   }
+
   public async getAllPatients() {
     return await PatientEntity.find();
   }

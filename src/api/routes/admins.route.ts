@@ -5,7 +5,7 @@ import { AdminController } from '@api/controllers/admins.controller';
 import asyncHandler from '@/utils/asyncHandler';
 import { AuthMiddleware } from '@/middlewares/auth.middleware';
 import { Role } from '@/constants';
-import { CreateAdminDto } from '@/dtos/admins.dto';
+import { CreateAdminDto, UpdateAdminDTO } from '@/dtos/admins.dto';
 
 export class AdminsRoute implements Routes {
   public path = '/admin';
@@ -29,7 +29,7 @@ export class AdminsRoute implements Routes {
     this.router.patch(
       `${this.path}/:id`,
       AuthMiddleware([Role.ADMIN]),
-      ValidationMiddleware(CreateAdminDto, true, true),
+      ValidationMiddleware(UpdateAdminDTO, true, true),
       asyncHandler(this.admin.updateAdmin),
     );
     this.router.delete(

@@ -6,10 +6,10 @@ import { OK } from '@/helpers/valid_response/success.response';
 
 export class AuthController {
   public auth = Container.get(AuthService);
-  public logIn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public logIn = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: Auth = req.body;
-      const { tokens, findUser } = await this.auth.login(userData);
+      const { tokens } = await this.auth.login(userData);
       new OK({
         message: 'login successfully',
         data: tokens,
@@ -19,11 +19,7 @@ export class AuthController {
     }
   };
 
-  public logOut = async (
-    req: RequestWithUser,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  public logOut = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
       const userData = req.req;
       const logOutUserData = await this.auth.logout(userData.role);

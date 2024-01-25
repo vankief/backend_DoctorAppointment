@@ -4,9 +4,11 @@ import {
   IsBoolean,
   IsString,
   IsOptional,
-  IsDateString,
   IsNumber,
+  IsPhoneNumber,
+  IsDateString,
 } from 'class-validator';
+import { Unique } from 'typeorm';
 export class CreateDoctorDto {
   @IsNotEmpty()
   @IsString()
@@ -14,6 +16,7 @@ export class CreateDoctorDto {
 
   @IsNotEmpty()
   @IsEmail()
+  @Unique(['email'])
   email: string;
 
   @IsNotEmpty()
@@ -25,7 +28,7 @@ export class CreateDoctorDto {
   img?: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsPhoneNumber('VN')
   phone: string;
 
   @IsNotEmpty()

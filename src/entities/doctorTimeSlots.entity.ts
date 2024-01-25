@@ -8,10 +8,11 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Relation,
   UpdateDateColumn,
 } from 'typeorm';
 import { DoctorTimeSlot } from '@/interfaces/doctors.interface.';
-import { ScheduleDay } from './scheduleDay.entity';
+import { ScheduleDayEntity } from './scheduleDay.entity';
 
 @Entity()
 export class DoctorTimeSlotEntity extends BaseEntity implements DoctorTimeSlot {
@@ -20,7 +21,7 @@ export class DoctorTimeSlotEntity extends BaseEntity implements DoctorTimeSlot {
 
   @ManyToOne(() => DoctorEntity, doctor => doctor.timeSlots)
   @JoinColumn({ name: 'doctorId' })
-  doctor: DoctorEntity; // And here
+  doctor: Relation<DoctorEntity>; // And here
 
   @Column()
   day: string;
@@ -28,11 +29,11 @@ export class DoctorTimeSlotEntity extends BaseEntity implements DoctorTimeSlot {
   @Column({ default: false })
   isPublic: boolean;
 
-  @OneToMany(() => ScheduleDay, scheduleDay => scheduleDay.doctorTimeSlot, {
+  @OneToMany(() => ScheduleDayEntity, scheduleDay => scheduleDay.doctorTimeSlot, {
     cascade: true,
     onDelete: 'CASCADE',
   })
-  listTime: ScheduleDay[];
+  listTime: Relation<ScheduleDayEntity[]>;
 
   @CreateDateColumn()
   createdAt: Date;

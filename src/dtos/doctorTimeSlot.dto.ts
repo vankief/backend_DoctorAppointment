@@ -3,7 +3,7 @@ import { IsArray, IsDateString, IsNotEmpty, IsNumber, IsOptional } from 'class-v
 export class DoctorTimeSlotDTO {
   @IsNotEmpty()
   @IsDateString()
-  day: Date;
+  day: string;
 
   @IsArray()
   @IsOptional()

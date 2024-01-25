@@ -15,11 +15,11 @@ import { unPick } from '@/utils/pick';
 import { hash } from 'bcrypt';
 import moment from 'moment';
 import { Service } from 'typedi';
-import { EntityRepository, getManager } from 'typeorm';
+import { EntityRepository, Repository, getManager } from 'typeorm';
 
 @Service()
 @EntityRepository()
-export class DoctorsService {
+export class DoctorsService extends Repository<DoctorEntity> {
   public async createDoctor(payload: ICreateDoctor) {
     const entityManager = getManager();
     const newPayload = {
@@ -38,8 +38,6 @@ export class DoctorsService {
       async transactionalEntityManager =>
         await transactionalEntityManager.getRepository(DoctorEntity).save(newPayload),
     );
-    console.log('abc', moment(payload.dob).format('DD-MM-YYYY'));
-
     //moment(a, 'DD-MM-YYYY');
     const password = convertDate(new Date(payload.dob));
     if (doctor) {
@@ -70,8 +68,8 @@ export class DoctorsService {
     return result;
   }
 
-  public async getDoctorById(id: string) {
-    const doctor = await DoctorEntity.findOne(id);
+  public async getDoctorById(doctorId: string) {
+    const doctor = await DoctorEntity.findOne(doctorId);
     if (!doctor) throw new HttpException(409, "Doctor doesn't exist");
     return doctor;
   }

@@ -8,6 +8,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  Relation,
 } from 'typeorm';
 import { Doctor } from '@/interfaces/doctors.interface.';
 import { DoctorTimeSlotEntity } from './doctorTimeSlots.entity';
@@ -84,7 +85,7 @@ export class DoctorEntity extends BaseEntity implements Doctor {
   year: string;
 
   @OneToMany(() => DoctorTimeSlotEntity, doctorTimeSlot => doctorTimeSlot.doctor)
-  timeSlots: DoctorTimeSlotEntity[];
+  timeSlots: Relation<DoctorTimeSlotEntity[]>;
 
   @Column()
   @CreateDateColumn() // Ngày tạo bản ghi

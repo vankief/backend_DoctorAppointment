@@ -1,5 +1,5 @@
 import { DoctorEntity } from '@/entities/doctors.entity';
-import { ScheduleDay } from '@/entities/scheduleDay.entity';
+import { ScheduleDayEntity } from '@/entities/scheduleDay.entity';
 
 export interface Doctor {
   name: string;
@@ -59,7 +59,18 @@ export interface DoctorTimeSlot {
   doctor: DoctorEntity;
   day: string;
   isPublic: boolean;
-  listTime: ScheduleDay[];
+  listTime: ScheduleDayEntity[];
+}
+export interface IGetListDoctorTimeSlot {
+  doctorId: string;
+  day: string;
+}
+
+export interface IGetListDoctorTimeSlotStartEndDay {
+  doctorId: string;
+  startDay: string;
+  endDay: string;
+  isPublic?: boolean;
 }
 export type IDoctorFilters = {
   searchTerm?: string;

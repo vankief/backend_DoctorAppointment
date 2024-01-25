@@ -1,9 +1,8 @@
 import { IListTime } from '@/interfaces/doctors.interface.';
 import { DoctorTimeSlotEntity } from '../doctorTimeSlots.entity';
-import { ScheduleDay } from '../scheduleDay.entity';
+import { ScheduleDayEntity } from '../scheduleDay.entity';
 import { EListTime } from '@/constants';
 import { DoctorEntity } from '../doctors.entity';
-import _, { forEach } from 'lodash';
 import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 
 interface ICreateTimeSlotRepo {
@@ -27,7 +26,7 @@ export default class DoctorTimeSlotRepo {
   public static async createDoctorTimeSlot({ doctor, dayString, listTime }: ICreateTimeSlotRepo) {
     const scheduleDays = await Promise.all(
       listTime.map(async item => {
-        const scheduleDay = ScheduleDay.create({
+        const scheduleDay = ScheduleDayEntity.create({
           timeSlot: EListTime[item.timeSlot],
           maximumPatient: item.maximumPatient,
         });
@@ -49,14 +48,14 @@ export default class DoctorTimeSlotRepo {
   public static async updateDoctorTimeSlot(isCreate: DoctorTimeSlotEntity, listTime: IListTime[]) {
     const scheduleDays = await Promise.all(
       listTime.map(async item => {
-        let scheduleDay = await ScheduleDay.findOne({
+        let scheduleDay = await ScheduleDayEntity.findOne({
           where: {
             doctorTimeSlot: isCreate.id,
             timeSlot: EListTime[item.timeSlot],
           },
         });
         if (!scheduleDay) {
-          scheduleDay = ScheduleDay.create({
+          scheduleDay = ScheduleDayEntity.create({
             timeSlot: EListTime[item.timeSlot],
             maximumPatient: item.maximumPatient,
           });
@@ -72,14 +71,14 @@ export default class DoctorTimeSlotRepo {
   }
 
   public static async deleteDoctorTimeSlot(id: number) {
-    await ScheduleDay.createQueryBuilder()
+    await ScheduleDayEntity.createQueryBuilder()
       .delete()
       .where('doctorTimeSlotId = :id', { id })
       .execute();
     return await DoctorTimeSlotEntity.delete(id);
   }
 
-  public static async changeDoctorTimeSlot(isPublic: boolean, id: number) {
+  public static async changeDoctorTimeSlotStatus(isPublic: boolean, id: number) {
     await DoctorTimeSlotEntity.createQueryBuilder()
       .update()
       .set({ isPublic })
@@ -91,59 +90,13 @@ export default class DoctorTimeSlotRepo {
     return result;
   }
 
-  // public static async getAppointmentTimeOfEachDoctor(doctorId: string, filter: any) {
-  //   const doctorTimeSlots = await DoctorTimeSlotEntity.find({
-  //     where: {
-  //       doctor: doctorId,
-  //     },
-  //     relations: ['listTime'],
-  //   });
-  //   if (filter.day) {
-  //     const result = doctorTimeSlots
-  //       .filter(item => item.day === filter.day) // Lọc theo ngày
-  //       .map(item => {
-  //         const listTime = item.listTime.filter(time => time.isPublic === true); // Lọc theo isPublic
-  //         return {
-  //           day: item.day,
-  //           listTime,
-  //         };
-  //       });
-  //     return result;
-  //   } else {
-  //     const result = doctorTimeSlots
-  //       .filter(item => {
-  //         const hasPublicTime = item.listTime.some(time => time.isPublic === true);
-  //         return hasPublicTime;
-  //       })
-  //       .map(item => {
-  //         const listTime = item.listTime.filter(time => time.isPublic === true);
-  //         return {
-  //           day: item.day,
-  //           listTime,
-  //         };
-  //       });
-
-  //     return result;
-  //   }
-  // }
-
-  // public static async getMyTimeSlot(doctorId: string) {
-  //   const doctorTimeSlots = await DoctorTimeSlotEntity.find({
-  //     where: {
-  //       doctor: doctorId,
-  //     },
-  //     relations: ['listTime'],
-  //   });
-  //   return doctorTimeSlots;
-  // }
-
   public static async getDoctorTimeSlot({
     doctorId,
     filter,
     isAdmin = false,
   }: IGetListDoctorTimeSlot) {
     const whereConditions = {
-      doctorId: doctorId,
+      doctor: doctorId,
     };
     const relations = ['listTime'];
     if (filter.day && !filter.endDay && !filter.startDay) {
@@ -164,7 +117,7 @@ export default class DoctorTimeSlotRepo {
     if (isAdmin) {
       relations.push('doctor');
     }
-
+    console.log('🚀 ~ DoctorTimeSlotRepo ~ whereConditions:', whereConditions);
     return await DoctorTimeSlotEntity.find({
       where: whereConditions,
       relations: relations,

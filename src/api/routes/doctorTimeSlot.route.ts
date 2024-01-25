@@ -29,18 +29,18 @@ export class DoctorTimeSlotRoute implements Routes {
       asyncHandler(this.doctorTimeSlot.deleteDoctorTimeSlot),
     );
     this.router.post(
-      `${this.path}/change-doctor-time-slot-status/:id`,
+      `${this.path}/change-status/:id`,
       AuthMiddleware([Role.ADMIN]),
-      asyncHandler(this.doctorTimeSlot.changeDoctorTimeSlot),
+      asyncHandler(this.doctorTimeSlot.changeDoctorTimeSlotStatus),
     );
     this.router.get(
-      `${this.path}/all`,
+      `${this.path}/all/:id`,
       AuthMiddleware([Role.ADMIN]),
       asyncHandler(this.doctorTimeSlot.getAllTimeSlot),
     );
     this.router.get(
       `${this.path}/appointment-time/:id`,
-      asyncHandler(this.doctorTimeSlot.getAppointmentTimeOfEachDoctor),
+      asyncHandler(this.doctorTimeSlot.getDoctorTimeSlotByPatient),
     );
     this.router.get(
       `${this.path}/`,

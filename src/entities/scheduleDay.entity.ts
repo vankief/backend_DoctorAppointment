@@ -6,19 +6,20 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Relation,
   UpdateDateColumn,
 } from 'typeorm';
 import { DoctorTimeSlotEntity } from './doctorTimeSlots.entity';
 import { EListTime } from '@/constants';
 
 @Entity()
-export class ScheduleDay extends BaseEntity {
+export class ScheduleDayEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => DoctorTimeSlotEntity, doctorTimeSlot => doctorTimeSlot.listTime)
   @JoinColumn({ name: 'doctorTimeSlotId' })
-  doctorTimeSlot: DoctorTimeSlotEntity;
+  doctorTimeSlot: Relation<DoctorTimeSlotEntity>;
 
   @Column({
     type: 'enum',

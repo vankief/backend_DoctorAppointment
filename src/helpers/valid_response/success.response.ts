@@ -5,7 +5,17 @@ export default class SuccessResponse {
   public reasonStatusCode: string;
   public data: any;
 
-  constructor({ message, statusCode, reasonStatusCode, data }: { message: string; statusCode: number; reasonStatusCode: string; data: any }) {
+  constructor({
+    message,
+    statusCode,
+    reasonStatusCode,
+    data,
+  }: {
+    message: string;
+    statusCode: number;
+    reasonStatusCode: string;
+    data: any;
+  }) {
     this.message = message;
     this.statusCode = statusCode;
     this.reasonStatusCode = reasonStatusCode;

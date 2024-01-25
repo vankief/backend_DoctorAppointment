@@ -2,7 +2,11 @@ import { Container } from 'typedi';
 import { DoctorTimeSlotService } from '../services/doctorTimeSlot.service';
 import { Request, Response } from 'express';
 import { OK } from '@/helpers/valid_response/success.response';
-import { ICreateTimeSlot } from '@/interfaces/doctors.interface.';
+import {
+  ICreateTimeSlot,
+  IGetListDoctorTimeSlot,
+  IGetListDoctorTimeSlotStartEndDay,
+} from '@/interfaces/doctors.interface.';
 import { RequestWithUser } from '@/interfaces/auths.interface';
 
 export class DoctorTimeSlotController {
@@ -27,7 +31,8 @@ export class DoctorTimeSlotController {
    * @desc:
    * */
   public deleteDoctorTimeSlot = async (req: RequestWithUser, res: Response) => {
-    const result = await this.doctorTimeSlot.deleteDoctorTimeSlot(Number(req.params.id));
+    const doctorTimeSlotId = +req.params.id;
+    const result = await this.doctorTimeSlot.deleteDoctorTimeSlot(doctorTimeSlotId);
     new OK({
       message: 'DoctorTimeSlot deleted successfully',
       data: result,
@@ -37,10 +42,13 @@ export class DoctorTimeSlotController {
   /**
    * @desc:
    * */
-  public changeDoctorTimeSlot = async (req: RequestWithUser, res: Response) => {
+  public changeDoctorTimeSlotStatus = async (req: RequestWithUser, res: Response) => {
     const timeSlotId = +req.params.id;
     const { isPublic } = req.body;
-    const doctorTimeSlot = await this.doctorTimeSlot.changeDoctorTimeSlot(isPublic, timeSlotId);
+    const doctorTimeSlot = await this.doctorTimeSlot.changeDoctorTimeSlotStatus(
+      isPublic,
+      timeSlotId,
+    );
     new OK({
       message: 'DoctorTimeSlot changed successfully',
       data: doctorTimeSlot,
@@ -50,10 +58,13 @@ export class DoctorTimeSlotController {
   /**
    * @desc:
    * */
-  public getAppointmentTimeOfEachDoctor = async (req: RequestWithUser, res: Response) => {
+  public getDoctorTimeSlotByPatient = async (req: RequestWithUser, res: Response) => {
     const doctorId = req.params.id;
-    const filter = req.body;
-    const doctorTimeSlots = await this.doctorTimeSlot.getDoctorTimeSlotByPatient(doctorId, filter);
+    const day = req.query.day as string;
+    const doctorTimeSlots = await this.doctorTimeSlot.getDoctorTimeSlotByPatient({
+      doctorId,
+      day,
+    });
     new OK({
       message: 'DoctorTimeSlots fetched successfully',
       data: doctorTimeSlots,
@@ -64,7 +75,13 @@ export class DoctorTimeSlotController {
    * @desc:
    * */
   public getAllTimeSlot = async (req: Request, res: Response) => {
-    const doctorTimeSlots = await this.doctorTimeSlot.getDoctorTimeSlotByAdmin();
+    const data = {
+      doctorId: req.params.id,
+      ...req.query,
+    } as IGetListDoctorTimeSlotStartEndDay;
+    const doctorTimeSlots = await this.doctorTimeSlot.getDoctorTimeSlotByAdmin({
+      ...data,
+    });
     new OK({
       message: 'DoctorTimeSlots fetched successfully',
       data: doctorTimeSlots,
@@ -75,8 +92,11 @@ export class DoctorTimeSlotController {
    * @desc:
    * */
   public getMyOwnTimeSlots = async (req: RequestWithUser, res: Response) => {
-    const doctorId = req.user.userId;
-    const doctorTimeSlots = await this.doctorTimeSlot.getMyOwnTimeSlots(doctorId);
+    const data = {
+      doctorId: req.user.userId,
+      ...req.body,
+    } as IGetListDoctorTimeSlot;
+    const doctorTimeSlots = await this.doctorTimeSlot.getMyOwnTimeSlots(data);
     new OK({
       message: 'DoctorTimeSlots fetched successfully',
       data: doctorTimeSlots,
