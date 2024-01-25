@@ -7,6 +7,10 @@ import { RequestWithUser } from '@/interfaces/auths.interface';
 
 export class DoctorTimeSlotController {
   public doctorTimeSlot = Container.get(DoctorTimeSlotService);
+
+  /**
+   * @desc:
+   * */
   public createOrUpdateDoctorTimeSlot = async (req: RequestWithUser, res: Response) => {
     const data = {
       doctorId: req.user.userId,
@@ -18,6 +22,10 @@ export class DoctorTimeSlotController {
       data: doctorTimeSlot,
     }).send(res);
   };
+
+  /**
+   * @desc:
+   * */
   public deleteDoctorTimeSlot = async (req: RequestWithUser, res: Response) => {
     const result = await this.doctorTimeSlot.deleteDoctorTimeSlot(Number(req.params.id));
     new OK({
@@ -25,41 +33,50 @@ export class DoctorTimeSlotController {
       data: result,
     }).send(res);
   };
+
+  /**
+   * @desc:
+   * */
   public changeDoctorTimeSlot = async (req: RequestWithUser, res: Response) => {
-    const timeSlotId = req.query.timeSlotId;
+    const timeSlotId = +req.params.id;
     const { isPublic } = req.body;
-    const doctorTimeSlot = await this.doctorTimeSlot.changeDoctorTimeSlot(
-      isPublic,
-      Number(timeSlotId),
-      Number(req.params.id),
-    );
+    const doctorTimeSlot = await this.doctorTimeSlot.changeDoctorTimeSlot(isPublic, timeSlotId);
     new OK({
       message: 'DoctorTimeSlot changed successfully',
       data: doctorTimeSlot,
     }).send(res);
   };
+
+  /**
+   * @desc:
+   * */
   public getAppointmentTimeOfEachDoctor = async (req: RequestWithUser, res: Response) => {
     const doctorId = req.params.id;
     const filter = req.body;
-    const doctorTimeSlots = await this.doctorTimeSlot.getAppointmentTimeOfEachDoctor(
-      doctorId,
-      filter,
-    );
+    const doctorTimeSlots = await this.doctorTimeSlot.getDoctorTimeSlotByPatient(doctorId, filter);
     new OK({
       message: 'DoctorTimeSlots fetched successfully',
       data: doctorTimeSlots,
     }).send(res);
   };
+
+  /**
+   * @desc:
+   * */
   public getAllTimeSlot = async (req: Request, res: Response) => {
-    const doctorTimeSlots = await this.doctorTimeSlot.getAllTimeSlot();
+    const doctorTimeSlots = await this.doctorTimeSlot.getDoctorTimeSlotByAdmin();
     new OK({
       message: 'DoctorTimeSlots fetched successfully',
       data: doctorTimeSlots,
     }).send(res);
   };
-  public getMyTimeSlot = async (req: RequestWithUser, res: Response) => {
+
+  /**
+   * @desc:
+   * */
+  public getMyOwnTimeSlots = async (req: RequestWithUser, res: Response) => {
     const doctorId = req.user.userId;
-    const doctorTimeSlots = await this.doctorTimeSlot.getMyTimeSlot(doctorId);
+    const doctorTimeSlots = await this.doctorTimeSlot.getMyOwnTimeSlots(doctorId);
     new OK({
       message: 'DoctorTimeSlots fetched successfully',
       data: doctorTimeSlots,

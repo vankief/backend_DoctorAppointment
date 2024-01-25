@@ -54,16 +54,56 @@ export class DoctorTimeSlotService {
       return DoctorTimeSlotRepo.changeDoctorTimeSlot(isPublic, id);
     }
   }
-  public async getAllTimeSlot() {
-    const doctorTimeSlots = await DoctorTimeSlotEntity.find({
-      relations: ['listTime', 'doctor'],
+  public async getDoctorTimeSlotByAdmin({
+    doctorId,
+    startDay,
+    endDay,
+    isPublic,
+  }: IGetListDoctorTimeSlotStartEndDay) {
+    const filter = {
+      startDay: startDay,
+      endDay: endDay,
+      isPublic,
+    };
+    return DoctorTimeSlotRepo.getDoctorTimeSlot({
+      doctorId,
+      filter,
+      isAdmin: true,
     });
-    return doctorTimeSlots;
   }
-  public async getAppointmentTimeOfEachDoctor(doctorId: string, filter: any) {
-    return DoctorTimeSlotRepo.getAppointmentTimeOfEachDoctor(doctorId, filter);
+
+  /*
+   * @des: get appointment time of each doctor (By PATIENT)
+   */
+  public async getDoctorTimeSlotByPatient({ doctorId, day }: IGetListDoctorTimeSlot) {
+    const filter = {
+      day: day,
+      isPublic: true,
+    };
+    return DoctorTimeSlotRepo.getDoctorTimeSlot({
+      doctorId,
+      filter,
+    });
   }
-  public async getMyTimeSlot(doctorId: string) {
-    return DoctorTimeSlotRepo.getMyTimeSlot(doctorId);
+  public async getMyOwnTimeSlots({ doctorId, day }: IGetListDoctorTimeSlot) {
+    const filter = {
+      day: day,
+    };
+    return DoctorTimeSlotRepo.getDoctorTimeSlot({
+      doctorId,
+      filter,
+    });
   }
+}
+
+interface IGetListDoctorTimeSlot {
+  doctorId: string;
+  day: string;
+}
+
+interface IGetListDoctorTimeSlotStartEndDay {
+  doctorId: string;
+  startDay: string;
+  endDay: string;
+  isPublic?: boolean;
 }

@@ -43,9 +43,9 @@ export class DoctorTimeSlotRoute implements Routes {
       asyncHandler(this.doctorTimeSlot.getAppointmentTimeOfEachDoctor),
     );
     this.router.get(
-      `${this.path}/my-time-slot/`,
+      `${this.path}/`,
       AuthMiddleware([Role.DOCTOR]),
-      asyncHandler(this.doctorTimeSlot.getMyTimeSlot),
+      asyncHandler(this.doctorTimeSlot.getMyOwnTimeSlots),
     );
   }
 }

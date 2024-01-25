@@ -4,11 +4,23 @@ import { ScheduleDay } from '../scheduleDay.entity';
 import { EListTime } from '@/constants';
 import { DoctorEntity } from '../doctors.entity';
 import _, { forEach } from 'lodash';
+import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 
 interface ICreateTimeSlotRepo {
   doctor: DoctorEntity;
   dayString: string;
   listTime: IListTime[];
+}
+
+interface IGetListDoctorTimeSlot {
+  doctorId: string;
+  filter: {
+    day?: string;
+    startDay?: string;
+    endDay?: string;
+    isPublic?: boolean;
+  };
+  isAdmin?: boolean;
 }
 
 export default class DoctorTimeSlotRepo {
@@ -79,49 +91,84 @@ export default class DoctorTimeSlotRepo {
     return result;
   }
 
-  public static async getAppointmentTimeOfEachDoctor(doctorId: string, filter: any) {
-    const doctorTimeSlots = await DoctorTimeSlotEntity.find({
-      where: {
-        doctor: doctorId,
-      },
-      relations: ['listTime'],
-    });
-    if (filter.day) {
-      const result = doctorTimeSlots
-        .filter(item => item.day === filter.day) // Lọc theo ngày
-        .map(item => {
-          const listTime = item.listTime.filter(time => time.isPublic === true); // Lọc theo isPublic
-          return {
-            day: item.day,
-            listTime,
-          };
-        });
-      return result;
-    } else {
-      const result = doctorTimeSlots
-        .filter(item => {
-          const hasPublicTime = item.listTime.some(time => time.isPublic === true);
-          return hasPublicTime;
-        })
-        .map(item => {
-          const listTime = item.listTime.filter(time => time.isPublic === true);
-          return {
-            day: item.day,
-            listTime,
-          };
-        });
+  // public static async getAppointmentTimeOfEachDoctor(doctorId: string, filter: any) {
+  //   const doctorTimeSlots = await DoctorTimeSlotEntity.find({
+  //     where: {
+  //       doctor: doctorId,
+  //     },
+  //     relations: ['listTime'],
+  //   });
+  //   if (filter.day) {
+  //     const result = doctorTimeSlots
+  //       .filter(item => item.day === filter.day) // Lọc theo ngày
+  //       .map(item => {
+  //         const listTime = item.listTime.filter(time => time.isPublic === true); // Lọc theo isPublic
+  //         return {
+  //           day: item.day,
+  //           listTime,
+  //         };
+  //       });
+  //     return result;
+  //   } else {
+  //     const result = doctorTimeSlots
+  //       .filter(item => {
+  //         const hasPublicTime = item.listTime.some(time => time.isPublic === true);
+  //         return hasPublicTime;
+  //       })
+  //       .map(item => {
+  //         const listTime = item.listTime.filter(time => time.isPublic === true);
+  //         return {
+  //           day: item.day,
+  //           listTime,
+  //         };
+  //       });
 
-      return result;
+  //     return result;
+  //   }
+  // }
+
+  // public static async getMyTimeSlot(doctorId: string) {
+  //   const doctorTimeSlots = await DoctorTimeSlotEntity.find({
+  //     where: {
+  //       doctor: doctorId,
+  //     },
+  //     relations: ['listTime'],
+  //   });
+  //   return doctorTimeSlots;
+  // }
+
+  public static async getDoctorTimeSlot({
+    doctorId,
+    filter,
+    isAdmin = false,
+  }: IGetListDoctorTimeSlot) {
+    const whereConditions = {
+      doctorId: doctorId,
+    };
+    const relations = ['listTime'];
+    if (filter.day && !filter.endDay && !filter.startDay) {
+      whereConditions['day'] = filter.day;
     }
-  }
+    if (filter.startDay) {
+      whereConditions['day'] = MoreThanOrEqual(filter.startDay);
+    }
 
-  public static async getMyTimeSlot(doctorId: string) {
-    const doctorTimeSlots = await DoctorTimeSlotEntity.find({
-      where: {
-        doctor: doctorId,
-      },
-      relations: ['listTime'],
+    if (filter.endDay) {
+      whereConditions['day'] = LessThanOrEqual(filter.endDay);
+    }
+
+    if (filter.isPublic !== undefined) {
+      whereConditions['isPublic'] = filter.isPublic;
+    }
+
+    if (isAdmin) {
+      relations.push('doctor');
+    }
+
+    return await DoctorTimeSlotEntity.find({
+      where: whereConditions,
+      relations: relations,
+      order: { day: 'ASC' },
     });
-    return doctorTimeSlots;
   }
 }
