@@ -13,7 +13,6 @@ export class PatientService {
   public async signup(payload: ICreatePatient) {
     const entityManager = getManager();
     const { password, ...patientData } = payload;
-    console.log('🚀 ~ PatientService ~ signup ~ patientData:', patientData);
     const isPatientCreated = await AuthEntity.findOne({ where: { email: patientData.email } });
     if (isPatientCreated) {
       throw new HttpException(409, 'Patient already exists');

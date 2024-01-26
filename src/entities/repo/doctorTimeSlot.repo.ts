@@ -45,29 +45,29 @@ export default class DoctorTimeSlotRepo {
     return newDoctorTimeSlot;
   }
 
-  public static async updateDoctorTimeSlot(isCreate: DoctorTimeSlotEntity, listTime: IListTime[]) {
+  public static async updateDoctorTimeSlot(
+    doctorTimeSlot: DoctorTimeSlotEntity,
+    listTime: IListTime[],
+  ) {
+    await ScheduleDayEntity.createQueryBuilder()
+      .delete()
+      .where('doctorTimeSlotId = :id', { id: doctorTimeSlot.id })
+      .execute();
+
+    // Tạo mới dữ liệu trong ScheduleDay
     const scheduleDays = await Promise.all(
       listTime.map(async item => {
-        let scheduleDay = await ScheduleDayEntity.findOne({
-          where: {
-            doctorTimeSlot: isCreate.id,
-            timeSlot: EListTime[item.timeSlot],
-          },
+        const scheduleDay = ScheduleDayEntity.create({
+          timeSlot: EListTime[item.timeSlot],
+          maximumPatient: item.maximumPatient,
         });
-        if (!scheduleDay) {
-          scheduleDay = ScheduleDayEntity.create({
-            timeSlot: EListTime[item.timeSlot],
-            maximumPatient: item.maximumPatient,
-          });
-        } else {
-          scheduleDay.maximumPatient = item.maximumPatient;
-        }
         return await scheduleDay.save();
       }),
     );
-    isCreate.listTime = scheduleDays;
-    await isCreate.save();
-    return isCreate;
+    doctorTimeSlot.listTime = scheduleDays;
+    await doctorTimeSlot.save();
+
+    return doctorTimeSlot;
   }
 
   public static async deleteDoctorTimeSlot(id: number) {
@@ -117,7 +117,6 @@ export default class DoctorTimeSlotRepo {
     if (isAdmin) {
       relations.push('doctor');
     }
-    console.log('🚀 ~ DoctorTimeSlotRepo ~ whereConditions:', whereConditions);
     return await DoctorTimeSlotEntity.find({
       where: whereConditions,
       relations: relations,

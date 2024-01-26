@@ -13,7 +13,6 @@ import { convertDate } from '@/utils';
 import calculatePagination, { IOption } from '@/utils/paginationHelper';
 import { unPick } from '@/utils/pick';
 import { hash } from 'bcrypt';
-import moment from 'moment';
 import { Service } from 'typedi';
 import { EntityRepository, Repository, getManager } from 'typeorm';
 
@@ -22,6 +21,8 @@ import { EntityRepository, Repository, getManager } from 'typeorm';
 export class DoctorsService extends Repository<DoctorEntity> {
   public async createDoctor(payload: ICreateDoctor) {
     const entityManager = getManager();
+    const authRepository = entityManager.getRepository(AuthEntity);
+
     const newPayload = {
       ...payload,
       services: JSON.stringify(payload.services),
@@ -41,7 +42,7 @@ export class DoctorsService extends Repository<DoctorEntity> {
     //moment(a, 'DD-MM-YYYY');
     const password = convertDate(new Date(payload.dob));
     if (doctor) {
-      await entityManager.getRepository(AuthEntity).save({
+      await authRepository.save({
         email: doctor.email,
         password: await hash(password, 10),
         userId: doctor.id,
@@ -82,10 +83,9 @@ export class DoctorsService extends Repository<DoctorEntity> {
     const queryBuilder = DoctorEntity.createQueryBuilder('doctor');
 
     if (searchTerm) {
-      const lowerSearchTerm = searchTerm.toLowerCase();
       DoctorSearchableFields.forEach((field, index) => {
-        queryBuilder.orWhere(`LOWER(${field}) LIKE :searchTerm${index}`, {
-          [`searchTerm${index}`]: `%${lowerSearchTerm}%`,
+        queryBuilder.orWhere(`${field} ILike :searchTerm${index}`, {
+          [`searchTerm${index}`]: `%${searchTerm}%`,
         });
       });
     }
@@ -99,18 +99,16 @@ export class DoctorsService extends Repository<DoctorEntity> {
     }
 
     if (specialist) {
-      const lowerSpecialist = specialist.toLowerCase();
-      queryBuilder.andWhere(`LOWER(doctor.specialization) LIKE :specialist`, {
-        specialist: `%${lowerSpecialist}%`,
+      queryBuilder.andWhere('doctor.specialization ILike :specialist', {
+        specialist: `%${specialist}%`,
       });
     }
 
     if (filterData) {
       Object.keys(filterData).forEach((key, index) => {
         if (filterData[key]) {
-          const lowerFilterData = filterData[key].toLowerCase();
-          queryBuilder.andWhere(`LOWER(doctor.${key}) LIKE :filterData${index}`, {
-            [`filterData${index}`]: `%${lowerFilterData}%`,
+          queryBuilder.andWhere(`doctor.${key} ILike :filterData${index}`, {
+            [`filterData${index}`]: `%${filterData[key]}%`,
           });
         }
       });

@@ -5,10 +5,12 @@ import {
   ICreateTimeSlot,
   IGetListDoctorTimeSlot,
   IGetListDoctorTimeSlotStartEndDay,
+  IListTime,
 } from '@/interfaces/doctors.interface.';
 import { Service } from 'typedi';
 import { EntityRepository } from 'typeorm';
 import DoctorTimeSlotRepo from '@/entities/repo/doctorTimeSlot.repo';
+import { arraysAreEqual } from '@/utils';
 
 @Service()
 @EntityRepository()
@@ -31,11 +33,24 @@ export class DoctorTimeSlotService {
         dayString,
         listTime,
       });
-    } else if (isCreate.isPublic == true) {
-      throw new HttpException(400, "Can't update public time slot");
-    } else {
-      return DoctorTimeSlotRepo.updateDoctorTimeSlot(isCreate, listTime);
     }
+
+    if (isCreate.isPublic) {
+      throw new HttpException(400, "Can't update public time slot");
+    }
+
+    const listTimeInDB: IListTime[] = isCreate.listTime.map(item => {
+      return {
+        timeSlot: item.timeSlot,
+        maximumPatient: item.maximumPatient,
+      };
+    });
+
+    if (arraysAreEqual(listTime, listTimeInDB)) {
+      throw new HttpException(400, 'List time not change');
+    }
+
+    return DoctorTimeSlotRepo.updateDoctorTimeSlot(isCreate, listTime);
   }
 
   public async deleteDoctorTimeSlot(timeSlotId: number) {
