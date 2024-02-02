@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { Doctor } from '@/interfaces/doctors.interface.';
 import { DoctorTimeSlotEntity } from './doctorTimeSlots.entity';
+import { AppointmentEntity } from './appointment.entity';
 
 @Entity()
 export class DoctorEntity extends BaseEntity implements Doctor {
@@ -86,6 +87,9 @@ export class DoctorEntity extends BaseEntity implements Doctor {
 
   @OneToMany(() => DoctorTimeSlotEntity, doctorTimeSlot => doctorTimeSlot.doctor)
   timeSlots: Relation<DoctorTimeSlotEntity[]>;
+
+  @OneToMany(() => AppointmentEntity, appointment => appointment.doctor)
+  appointments: Relation<AppointmentEntity[]>;
 
   @Column()
   @CreateDateColumn() // Ngày tạo bản ghi

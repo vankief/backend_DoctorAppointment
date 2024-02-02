@@ -7,8 +7,11 @@ import {
   Unique,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
+  Relation,
 } from 'typeorm';
 import { Patient } from '@/interfaces/patients.interface';
+import { AppointmentEntity } from './appointment.entity';
 
 @Entity()
 export class PatientEntity extends BaseEntity implements Patient {
@@ -43,6 +46,9 @@ export class PatientEntity extends BaseEntity implements Patient {
   @Column()
   @IsNotEmpty()
   dob: string;
+
+  @OneToMany(() => AppointmentEntity, appointment => appointment.patient)
+  appointments: Relation<AppointmentEntity[]>;
 
   @Column()
   @CreateDateColumn()

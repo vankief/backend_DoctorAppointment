@@ -20,3 +20,17 @@ export enum EListTime {
   T5 = 'T5',
   T6 = 'T6',
 }
+
+export enum EStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  CANCELLED = 'CANCELLED',
+  COMPLETED = 'COMPLETED',
+  AWAITING_PAYMENT = 'AWAITING_PAYMENT',
+}
+
+export enum EPaymentType {
+  ONLINE = 'ONLINE',
+  SMARTCARD = 'SMARTCARD',
+}

@@ -19,6 +19,7 @@ export class DoctorsController {
       data: doctor,
     }).send(res);
   };
+
   public updateDoctor = async (req: Request, res: Response) => {
     const doctor = await this.doctor.updateDoctor(req.params.id, req.body);
     new OK({
@@ -26,6 +27,7 @@ export class DoctorsController {
       data: doctor,
     }).send(res);
   };
+
   public getDoctorById = async (req: Request, res: Response) => {
     const doctors = await this.doctor.getDoctorById(req.params.id);
     new OK({
@@ -33,6 +35,7 @@ export class DoctorsController {
       data: doctors,
     }).send(res);
   };
+
   public deleteDoctor = async (req: Request, res: Response) => {
     const result = await this.doctor.deleteDoctor(req.params.id);
     new OK({
@@ -40,6 +43,7 @@ export class DoctorsController {
       data: result,
     }).send(res);
   };
+
   public getAllDoctors = async (req: Request, res: Response) => {
     const filter: IDoctorFilters = pick(req.query, IDoctorFiltersData);
     const options: IOption = pick(req.query, IDoctorOptions);
