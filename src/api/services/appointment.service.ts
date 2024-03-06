@@ -2,17 +2,19 @@ import { AppointmentEntity } from '@/entities/appointment.entity';
 import { DoctorEntity } from '@/entities/doctors.entity';
 import { PatientEntity } from '@/entities/patient.entity';
 import { HttpException } from '@/helpers/exceptions/httpException';
-import { ICreateAppointment } from '@/interfaces/appointment.interface';
+import { ICreateAppointment, IGetAppointmentByAdmin } from '@/interfaces/appointment.interface';
 import { Service } from 'typedi';
 import { EntityRepository } from 'typeorm';
 import { PaymentService } from './payment.service';
 import { SmartCardService } from './smartcard.service';
 import { EPaymentType, EStatus } from '@/constants';
+import AppointmentRepo from '@/entities/repo/appointment.repo';
 @Service()
 @EntityRepository()
 export class AppointmentService {
   public paymentService = new PaymentService();
   public smartCardService = new SmartCardService();
+
   public async createAppointment(data: ICreateAppointment) {
     const { doctorId, patientId, reason, scheduledDate, scheduledTime, paymentType } = data;
     const doctor = await DoctorEntity.findOne(doctorId);
@@ -54,13 +56,6 @@ export class AppointmentService {
     }
     return appointment;
   }
-
-  public async getAllAppointments() {
-    return await AppointmentEntity.find({
-      relations: ['doctor', 'patient'],
-    });
-  }
-
   public async updateStatus(id: string, status: string) {
     const appointment = await AppointmentEntity.findOne(id);
     if (!appointment) {
@@ -70,10 +65,43 @@ export class AppointmentService {
     return await appointment.save();
   }
 
-  public async getPatientAppointmentById(patientId: string) {
-    return await AppointmentEntity.find({
-      where: { patient: patientId },
-      relations: ['doctor', 'patient'],
+  public async getAppointmentByAdmin({
+    doctorId,
+    scheduleDate,
+    scheduleTime,
+    status,
+  }: IGetAppointmentByAdmin) {
+    const filter = {
+      scheduleDate,
+      scheduleTime,
+      status,
+    };
+    return await AppointmentRepo.getListAppointment({
+      doctorId,
+      filter,
+      isAdmin: true,
+    });
+  }
+
+  public async getListAppointmentByPatient({ patientId, scheduleDate, status }) {
+    const filter = {
+      scheduleDate,
+      status,
+    };
+    return await AppointmentRepo.getListAppointment({
+      patientId,
+      filter,
+    });
+  }
+
+  public async getListAppointmentByDoctor({ doctorId, scheduleDate, status }) {
+    const filter = {
+      scheduleDate,
+      status,
+    };
+    return await AppointmentRepo.getListAppointment({
+      doctorId,
+      filter,
     });
   }
 }

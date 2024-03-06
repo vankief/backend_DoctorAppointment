@@ -31,17 +31,20 @@ export class AdminService extends Repository<AdminEntity> {
     }
     return admin;
   }
+
   public async getAdminById(id: string) {
     const admin = await AdminEntity.findOne({ where: { id } });
     if (!admin) throw new HttpException(404, 'Admin not found');
     return admin;
   }
+
   public async updateAdmin(id: string, payload: Admin) {
     const newPayload = unPick(payload, ['id', 'email']);
     const admin = await AdminEntity.findOne({ where: { id } });
     if (!admin) throw new HttpException(404, 'Admin not found');
     return await AdminEntity.update(id, newPayload);
   }
+
   public async deleteAdmin(id: string) {
     const result = getManager().transaction(async transactionalEntityManager => {
       const admin = await transactionalEntityManager.getRepository(AdminEntity).findOne(id);

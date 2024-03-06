@@ -15,7 +15,7 @@ import { DoctorEntity } from './doctors.entity';
 @Entity()
 export class AppointmentEntity extends BaseEntity implements Appointment {
   @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  id: string;
 
   @ManyToOne(() => PatientEntity, patient => patient.appointments)
   @JoinColumn({ name: 'patientId' })
@@ -24,6 +24,9 @@ export class AppointmentEntity extends BaseEntity implements Appointment {
   @ManyToOne(() => DoctorEntity, doctor => doctor.appointments)
   @JoinColumn({ name: 'doctorId' })
   doctor: DoctorEntity;
+
+  @Column()
+  fee: number;
 
   @Column()
   reason: string;

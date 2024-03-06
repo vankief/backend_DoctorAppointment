@@ -12,5 +12,6 @@ export const {
   LOG_FORMAT,
   LOG_DIR,
   ORIGIN,
+  STRIPE_SECRET_KEY,
 } = process.env;
 export const { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_DATABASE } = process.env;

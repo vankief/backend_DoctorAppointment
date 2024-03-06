@@ -18,16 +18,6 @@ export class AppointmentController {
     new OK({ message: 'Appointment created successfully', data: appointment }).send(res);
   };
 
-  public getAppointments = async (req: RequestWithUser, res: Response) => {
-    const appointments = await this.appointment.getAllAppointments();
-    new OK({ message: 'Appointments found successfully', data: appointments }).send(res);
-  };
-
-  public getAppointmentById = async (req: RequestWithUser, res: Response) => {
-    const appointment = await this.appointment.getAppointmentById(req.params.id);
-    new OK({ message: 'Appointment found successfully', data: appointment }).send(res);
-  };
-
   public deleteAppointment = async (req: RequestWithUser, res: Response) => {
     const status = EStatus.CANCELLED;
     const appointmentId = req.params.id;
@@ -42,9 +32,47 @@ export class AppointmentController {
     new OK({ message: 'Appointment status updated successfully', data: result }).send(res);
   };
 
-  public getPatientAppointmentById = async (req: RequestWithUser, res: Response) => {
+  public getAppointmentById = async (req: Request, res: Response) => {
+    const appointmentId = req.params.id;
+    const appointment = await this.appointment.getAppointmentById(appointmentId);
+    new OK({ message: 'Appointment details', data: appointment }).send(res);
+  };
+
+  public getAppointmentsByPatient = async (req: RequestWithUser, res: Response) => {
     const patientId = req.user.userId;
-    const appointment = await this.appointment.getPatientAppointmentById(patientId);
-    new OK({ message: 'Appointment found successfully', data: appointment }).send(res);
+    const scheduleDate = req.params.scheduleDate;
+    const status = req.query.status;
+    const appointments = await this.appointment.getListAppointmentByPatient({
+      patientId,
+      scheduleDate,
+      status,
+    });
+    new OK({ message: 'Appointments', data: appointments }).send(res);
+  };
+
+  public getAppointmentsByDoctor = async (req: RequestWithUser, res: Response) => {
+    const doctorId = req.user.userId;
+    const scheduleDate = req.params.scheduleDate;
+    const status = req.query.status;
+    const appointments = await this.appointment.getListAppointmentByDoctor({
+      doctorId,
+      scheduleDate,
+      status,
+    });
+    new OK({ message: 'Appointments', data: appointments }).send(res);
+  };
+
+  public getAppointmentsByAdmin = async (req: RequestWithUser, res: Response) => {
+    const doctorId = req.params.doctorId;
+    const scheduleDate = req.params.scheduleDate;
+    const scheduleTime = req.query.scheduleTime as string;
+    const status = req.query.status as string;
+    const appointments = await this.appointment.getAppointmentByAdmin({
+      doctorId,
+      scheduleDate,
+      scheduleTime,
+      status,
+    });
+    new OK({ message: 'Appointments', data: appointments }).send(res);
   };
 }

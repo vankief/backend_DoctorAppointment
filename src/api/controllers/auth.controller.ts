@@ -12,7 +12,9 @@ export class AuthController {
       const { tokens } = await this.auth.login(userData);
       new OK({
         message: 'login successfully',
-        data: tokens,
+        data: {
+          ...tokens,
+        },
       }).send(res);
     } catch (error) {
       next(error);

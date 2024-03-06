@@ -18,23 +18,27 @@ export class DoctorRouter implements Routes {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/:id`, asyncHandler(this.doctors.getDoctorById));
+
     this.router.post(
       `${this.path}`,
       AuthMiddleware([Role.ADMIN]),
       ValidationMiddleware(CreateDoctorDto),
       asyncHandler(this.doctors.createDoctor),
     );
+
     this.router.patch(
       `${this.path}/:id`,
       AuthMiddleware([Role.ADMIN]),
       ValidationMiddleware(CreateDoctorDto, true, true),
       asyncHandler(this.doctors.updateDoctor),
     );
+
     this.router.delete(
       `${this.path}/:id`,
       AuthMiddleware([Role.ADMIN]),
       asyncHandler(this.doctors.deleteDoctor),
     );
+
     this.router.get(
       `${this.path}`,
       AuthMiddleware([Role.ADMIN]),

@@ -22,13 +22,17 @@ export class PatientRoute implements Routes {
       ValidationMiddleware(CreatePatientDto),
       asyncHandler(this.patient.signup),
     );
+
     this.router.get(
       `${this.path}`,
       AuthMiddleware([Role.ADMIN]),
       asyncHandler(this.patient.getAllPatients),
     );
+
     this.router.get(`${this.path}/:id`, asyncHandler(this.patient.getPatientById));
+
     this.router.delete(`${this.path}/:id`, this.patient.deletePatient);
+
     this.router.patch(
       `${this.path}/:id`,
       AuthMiddleware([Role.PATIENT]),

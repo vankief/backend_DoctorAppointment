@@ -8,7 +8,7 @@ import {
   MaxLength,
 } from 'class-validator';
 export class CreatePatientDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   name: string;
 
@@ -22,7 +22,7 @@ export class CreatePatientDto {
   @MaxLength(32)
   password: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   address: string;
 
@@ -30,15 +30,15 @@ export class CreatePatientDto {
   @IsString()
   img?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   phone: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsBoolean()
   gender: boolean;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   dob: string;
 }

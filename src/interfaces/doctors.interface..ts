@@ -9,18 +9,13 @@ export interface Doctor {
   phone: string;
   gender: boolean;
   dob: string;
-  biography?: string;
   price?: number;
   services: string; // dịch vụ
-  specialization: string; //chuyên khoa
   degree: string; //bằng cấp
   college: string;
-  completionYear: string;
   experience: string; // kinh nghiệm
   designation: string; // chức vụ hiện tại
   awards: string; // giải thưởng
-  registration: string; // số đăng ký hành nghề
-  year: string;
 }
 export interface ICreateDoctor {
   name: string;
@@ -30,18 +25,31 @@ export interface ICreateDoctor {
   phone: string;
   gender: boolean;
   dob: string;
-  biography?: string;
+  specialistId: string;
   price?: number;
   services?: string;
-  specialization?: string;
   degree?: string;
   college?: string;
-  completionYear?: string;
   experience?: string;
   designation?: string;
   awards?: string;
-  registration?: string;
-  year?: string;
+}
+
+export interface IUpdateDoctor {
+  name?: string;
+  address?: string;
+  img?: string;
+  phone?: string;
+  gender?: boolean;
+  dob?: string;
+  price?: number;
+  services?: string;
+  degree?: string;
+  college?: string;
+  experience?: string;
+  designation?: string;
+  awards?: string;
+  specialistId?: string; // Chỉ cập nhật ID của chuyên khoa
 }
 
 export interface IListTime {

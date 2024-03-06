@@ -1,6 +1,7 @@
 import { Role } from '@/constants';
 import { AuthEntity } from '@/entities/auths.entity';
 import { DoctorEntity } from '@/entities/doctors.entity';
+import { SpecialistEntity } from '@/entities/specialist.entity';
 import { HttpException } from '@/helpers/exceptions/httpException';
 import { IGenericResponse } from '@/interfaces/auths.interface';
 import {
@@ -8,13 +9,14 @@ import {
   DoctorSearchableFields,
   ICreateDoctor,
   IDoctorFilters,
+  IUpdateDoctor,
 } from '@/interfaces/doctors.interface.';
 import { convertDate } from '@/utils';
 import calculatePagination, { IOption } from '@/utils/paginationHelper';
 import { unPick } from '@/utils/pick';
 import { hash } from 'bcrypt';
 import { Service } from 'typedi';
-import { EntityRepository, Repository, getManager } from 'typeorm';
+import { EntityManager, EntityRepository, Repository, getManager } from 'typeorm';
 
 @Service()
 @EntityRepository()
@@ -23,17 +25,18 @@ export class DoctorsService extends Repository<DoctorEntity> {
     const entityManager = getManager();
     const authRepository = entityManager.getRepository(AuthEntity);
 
+    const specialist = await SpecialistEntity.findOne(payload.specialistId);
+    if (!specialist) throw new HttpException(409, "Specialist doesn't exist");
+
     const newPayload = {
       ...payload,
       services: JSON.stringify(payload.services),
-      specialization: JSON.stringify(payload.specialization),
       degree: JSON.stringify(payload.degree),
       college: JSON.stringify(payload.college),
-      completionYear: JSON.stringify(payload.completionYear),
       experience: JSON.stringify(payload.experience),
       designation: JSON.stringify(payload.designation),
       awards: JSON.stringify(payload.awards),
-      registration: JSON.stringify(payload.registration),
+      specialist,
     };
     const doctor = await entityManager.transaction(
       async transactionalEntityManager =>
@@ -52,20 +55,51 @@ export class DoctorsService extends Repository<DoctorEntity> {
     return doctor;
   }
 
-  public async updateDoctor(id: string, payload: Partial<Doctor>) {
-    const newPayload = unPick(payload, ['id', 'email']);
+  public async updateDoctor(id: string, payload: IUpdateDoctor) {
     const doctor = await DoctorEntity.findOne(id);
     if (!doctor) throw new HttpException(409, "Doctor doesn't exist");
-    return await DoctorEntity.update({ id }, newPayload);
+
+    const specialist = await SpecialistEntity.findOne(payload.specialistId);
+    if (!specialist) throw new HttpException(409, "Specialist doesn't exist");
+
+    const newPayload = {
+      ...payload,
+      services: JSON.stringify(payload.services),
+      degree: JSON.stringify(payload.degree),
+      college: JSON.stringify(payload.college),
+      experience: JSON.stringify(payload.experience),
+      designation: JSON.stringify(payload.designation),
+      awards: JSON.stringify(payload.awards),
+      specialist,
+    };
+    const result = await DoctorEntity.update(id, unPick(newPayload, ['id', 'email']));
+    return result;
   }
 
   public async deleteDoctor(id: string) {
-    const result = await getManager().transaction(async transactionalEntityManager => {
-      const doctor = await transactionalEntityManager.getRepository(DoctorEntity).findOne(id);
-      if (!doctor) throw new HttpException(409, "Doctor doesn't exist");
-      await transactionalEntityManager.getRepository(DoctorEntity).delete(id);
-      await transactionalEntityManager.getRepository(AuthEntity).delete({ userId: id });
-    });
+    const result = await getManager().transaction(
+      async (transactionalEntityManager: EntityManager) => {
+        // Kiểm tra xem bác sĩ có tồn tại hay không
+        const doctor = await transactionalEntityManager.getRepository(DoctorEntity).findOne(id, {
+          relations: ['specialist'], // Đảm bảo load thông tin của chuyên khoa
+        });
+
+        if (!doctor) {
+          throw new HttpException(404, 'Doctor not found');
+        }
+
+        // Xóa bác sĩ khỏi bảng DoctorEntity
+        await transactionalEntityManager.getRepository(DoctorEntity).delete(id);
+
+        // Kiểm tra xem có chuyên khoa được liên kết không
+        if (doctor.specialist) {
+          // Cập nhật bác sĩ đóng góp vào mảng doctors của chuyên khoa
+          doctor.specialist.doctors = doctor.specialist.doctors.filter(doc => doc.id !== id);
+          await transactionalEntityManager.getRepository(SpecialistEntity).save(doctor.specialist);
+        }
+      },
+    );
+
     return result;
   }
 

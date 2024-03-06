@@ -33,8 +33,6 @@ export class AppointmentRoute implements Routes {
       asyncHandler(this.appointmentController.createAppointment),
     );
 
-    this.router.get(`${this.path}/get`, asyncHandler(this.appointmentController.getAppointments));
-
     this.router.get(
       `${this.path}/get/:id`,
       asyncHandler(this.appointmentController.getAppointmentById),
@@ -52,9 +50,21 @@ export class AppointmentRoute implements Routes {
     );
 
     this.router.get(
-      `${this.path}/:id`,
+      `${this.path}`,
       AuthMiddleware([Role.PATIENT]),
-      asyncHandler(this.appointmentController.getPatientAppointmentById),
+      asyncHandler(this.appointmentController.getAppointmentsByPatient),
+    );
+
+    this.router.get(
+      `${this.path}/doctor/`,
+      AuthMiddleware([Role.DOCTOR]),
+      asyncHandler(this.appointmentController.getAppointmentsByDoctor),
+    );
+
+    this.router.get(
+      `${this.path}/admin/`,
+      AuthMiddleware([Role.ADMIN]),
+      asyncHandler(this.appointmentController.getAppointmentsByAdmin),
     );
   }
 }

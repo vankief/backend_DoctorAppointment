@@ -1,4 +1,3 @@
-import { IsNotEmpty } from 'class-validator';
 import {
   BaseEntity,
   Entity,
@@ -19,32 +18,26 @@ export class PatientEntity extends BaseEntity implements Patient {
   @Unique(['uuid'])
   id: string;
 
-  @Column()
-  @IsNotEmpty()
+  @Column({ nullable: true })
   name: string;
 
   @Column()
-  @IsNotEmpty()
   @Unique(['email'])
   email: string;
 
-  @Column()
-  @IsNotEmpty()
+  @Column({ nullable: true })
   address: string;
 
-  @Column()
+  @Column({ nullable: true })
   img?: string;
 
-  @Column()
-  @IsNotEmpty()
+  @Column({ nullable: true })
   phone: string;
 
-  @Column()
-  @IsNotEmpty()
+  @Column({ nullable: true })
   gender: boolean;
 
-  @Column()
-  @IsNotEmpty()
+  @Column({ nullable: true })
   dob: string;
 
   @OneToMany(() => AppointmentEntity, appointment => appointment.patient)

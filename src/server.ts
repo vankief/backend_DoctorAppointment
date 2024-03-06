@@ -5,6 +5,8 @@ import { AdminsRoute } from './api/routes/admins.route';
 import { DoctorRouter } from './api/routes/doctors.route';
 import { PatientRoute } from './api/routes/patients.route';
 import { DoctorTimeSlotRoute } from './api/routes/doctorTimeSlot.route';
+import { AppointmentRoute } from './api/routes/appointment.route';
+import { TestRouter } from './api/routes/test.route';
 
 ValidateEnv();
 
@@ -14,6 +16,8 @@ const app = new App([
   new DoctorRouter(),
   new PatientRoute(),
   new DoctorTimeSlotRoute(),
+  new AppointmentRoute(),
+  new TestRouter(),
 ]);
 
 app.listen();

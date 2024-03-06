@@ -7,10 +7,10 @@ export class PatientController {
   public patient = Container.get(PatientService);
 
   public signup = async (req: Request, res: Response) => {
-    const patient = await this.patient.signup(req.body);
+    const { tokens, patient } = await this.patient.signup(req.body);
     new OK({
       message: 'Patient created successfully',
-      data: patient,
+      data: tokens,
     }).send(res);
   };
   public updatePatient = async (req: Request, res: Response) => {
