@@ -72,7 +72,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\"email\": \"uongthivankieuct4@gmail.com\",\n  \"password\": \"09042001\"\n}",
+							"raw": "{\n\"email\": \"bsb@example.com\",\n\"password\": \"15051985\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -96,25 +96,12 @@
 				},
 				{
 					"name": "Login_Patient",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();",
-									"pm.environment.set('jwt_token', \"Bearer \" + response.data.accessToken);",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\n    \"email\": \"uongthivankieu@gmail.com\",\n    \"password\": \"123456\"\n}",
+							"raw": "{\r\n\"email\": \"uongthivankieu@gmail.com\",\r\n\"password\": \"123456\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -205,7 +192,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"hoang vy anh\",\r\n  \"email\": \"uongthivankieuct4@gmail.com\",\r\n  \"address\": \"Hà Nội\",\r\n  \"phone\": \"0368213451\",\r\n  \"gender\": true,\r\n  \"dob\": \"2001-04-09\" //YYYY/MM/DD\r\n}",
+							"raw": "{\r\n  \"name\": \"Bác sĩ B\",\r\n  \"email\": \"bsb@example.com\",\r\n  \"address\": \"456 Đường XYZ, Quận ABC, Thành phố HCM\",\r\n  \"img\": \"https://example.com/bsb-image.jpg\",\r\n  \"phone\": \"0987654321\",\r\n  \"gender\": false,\r\n  \"dob\": \"1985-05-15\",\r\n  \"specialistId\": \"57a7f82a-e015-4753-94d8-a1ba8949a585\", // ID của chuyên khoa (giả sử là \"abc123\")\r\n  \"price\": 800000,\r\n  \"services\": \"Kiểm tra sức khỏe tổng quát, Tư vấn dinh dưỡng\",\r\n  \"degree\": \"Bác sĩ Y khoa\",\r\n  \"college\": \"Đại học Y dược Hà Nội\",\r\n  \"experience\": \"8 năm\",\r\n  \"designation\": \"Chuyên viên Y khoa\",\r\n  \"awards\": \"Giải thưởng Y khoa xuất sắc 2019\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -233,7 +220,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{protocol}}://{{domain}}:{{port}}/doctors/a47fb364-d96c-4251-a7a9-a01ad22a1a3d",
+							"raw": "{{protocol}}://{{domain}}:{{port}}/doctors/cb97e7a6-9ca1-4b5d-9b73-b16850729654",
 							"protocol": "{{protocol}}",
 							"host": [
 								"{{domain}}"
@@ -241,7 +228,7 @@
 							"port": "{{port}}",
 							"path": [
 								"doctors",
-								"a47fb364-d96c-4251-a7a9-a01ad22a1a3d"
+								"cb97e7a6-9ca1-4b5d-9b73-b16850729654"
 							],
 							"query": [
 								{
@@ -261,7 +248,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "{{jwt_token}}",
+								"value": "{{jwt_token_admin}}}",
 								"type": "text"
 							}
 						],
@@ -293,7 +280,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"uongthivankieuct4@gmail.com\",\r\n    \"name\": \"Uông Thị Vân Kiều\",\r\n    \"price\": 123000,\r\n    \"services\": \"online và offline\"\r\n}",
+							"raw": "{\r\n  \"name\": \"Bác sĩ B\",\r\n  \"email\": \"bsb@example.com\",\r\n  \"address\": \"456 Đường XYZ, Quận ABC, Thành phố HCM\",\r\n  \"img\": \"https://example.com/bsb-image.jpg\",\r\n  \"phone\": \"0987654321\",\r\n  \"gender\": false,\r\n  \"dob\": \"1985-05-15\",\r\n  \"specialistId\": \"80b83b0b-a672-49a0-8316-a009110550f6\", // ID của chuyên khoa (giả sử là \"abc123\")\r\n  \"price\": 800000,\r\n  \"services\": \"Kiểm tra sức khỏe tổng quát, Tư vấn dinh dưỡng\",\r\n  \"degree\": \"Bác sĩ Y khoa\",\r\n  \"college\": \"Đại học Y dược Hà Nội\",\r\n  \"experience\": \"8 năm\",\r\n  \"designation\": \"Chuyên viên Y khoa\",\r\n  \"awards\": \"Giải thưởng Y khoa xuất sắc 2019\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -301,7 +288,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}://{{domain}}:{{port}}/doctors/a47fb364-d96c-4251-a7a9-a01ad22a1a3d",
+							"raw": "{{protocol}}://{{domain}}:{{port}}/doctors/cb97e7a6-9ca1-4b5d-9b73-b16850729654",
 							"protocol": "{{protocol}}",
 							"host": [
 								"{{domain}}"
@@ -309,7 +296,7 @@
 							"port": "{{port}}",
 							"path": [
 								"doctors",
-								"a47fb364-d96c-4251-a7a9-a01ad22a1a3d"
+								"cb97e7a6-9ca1-4b5d-9b73-b16850729654"
 							]
 						}
 					},
@@ -341,7 +328,236 @@
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "CRUD Doctor"
+		},
+		{
+			"name": "Specialist",
+			"item": [
+				{
+					"name": "CreateSpecialist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "payload",
+									"value": "{}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt_token_admin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Chuyên khoa Nội tiết\",\r\n    \"description\": \"Chuyên sâu về các vấn đề nội tiết của cơ thể\",\r\n    \"image\": \"https://example.com/endocrinology-image.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/specialists/",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"specialists",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSpecialistById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/specialists/a47fb364-d96c-4251-a7a9-a01ad22a1a3d",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"specialists",
+								"a47fb364-d96c-4251-a7a9-a01ad22a1a3d"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1231",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllSpecialist",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt_token_admin}}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/specialists/",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"specialists",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateSpecialist",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt_token_admin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"uongthivankieuct4@gmail.com\",\r\n    \"name\": \"Uông Thị Vân Kiều\",\r\n    \"price\": 123000,\r\n    \"services\": \"online và offline\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/specialists/4036de52-6687-42da-8344-543ca89ed4d8",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"specialists",
+								"4036de52-6687-42da-8344-543ca89ed4d8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteSpecialist",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt_token_admin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/specialists/7ac9d1e7-3906-453c-bff4-d8ee77af8ce2",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"specialists",
+								"7ac9d1e7-3906-453c-bff4-d8ee77af8ce2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SpecialistDoctor",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/api/v1/specialists/listdoctors",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"specialists",
+								"listdoctors"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "CRUD Doctor"
 		},
 		{
 			"name": "Admin",
@@ -656,7 +872,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"hoang vy anh\",\n  \"email\": \"uongthivankieu@gmail.com\",\n  \"password\": \"123456\",\n  \"address\": \"Hà Nội\",\n  \"phone\": \"03682134513\",\n  \"gender\": true,\n  \"dob\": \"2001-04-09\"\n}",
+							"raw": "{\n//   \"name\": \"hoang vy anh\",\n  \"email\": \"uongthivankieu134@gmail.com\",\n  \"password\": \"123456\"\n//   \"address\": \"Hà Nội\",\n//   \"phone\": \"03682134513\",\n//   \"gender\": true,\n//   \"dob\": \"2001-04-09\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -697,7 +913,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"day\": \"2022-12-16\",\r\n  \"listTime\": [\r\n    {\r\n      \"timeSlot\": \"T3\",\r\n      \"maximumPatient\": 20\r\n    },\r\n    {\r\n      \"timeSlot\": \"T5\",\r\n      \"maximumPatient\": 5\r\n    },\r\n    {\r\n      \"timeSlot\": \"T4\",\r\n      \"maximumPatient\": 9\r\n    }\r\n  ]\r\n  \r\n}",
+							"raw": "{\r\n  \"day\": \"2022-12-16\",\r\n  \"listTime\": [\r\n    {\r\n      \"timeSlot\": \"T3\",\r\n      \"maximumPatient\": 20\r\n    },\r\n    {\r\n      \"timeSlot\": \"T5\",\r\n      \"maximumPatient\": 5\r\n    },\r\n    {\r\n      \"timeSlot\": \"T4\",\r\n      \"maximumPatient\": 9\r\n    }\r\n  ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -742,7 +958,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "\r\n  {\r\n    \"day\": \"2022-12-15\"\r\n  }",
+							"raw": "\r\n  {\r\n    \"day\": \"2022-12-16\"\r\n  }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -750,7 +966,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}://{{domain}}:{{port}}/doctorTimeSlot/appointment-time/a47fb364-d96c-4251-a7a9-a01ad22a1a3d?day=2022-12-16",
+							"raw": "{{protocol}}://{{domain}}:{{port}}/doctorTimeSlot/appointment-time/cb97e7a6-9ca1-4b5d-9b73-b16850729654?day=2022-12-16",
 							"protocol": "{{protocol}}",
 							"host": [
 								"{{domain}}"
@@ -759,7 +975,7 @@
 							"path": [
 								"doctorTimeSlot",
 								"appointment-time",
-								"a47fb364-d96c-4251-a7a9-a01ad22a1a3d"
+								"cb97e7a6-9ca1-4b5d-9b73-b16850729654"
 							],
 							"query": [
 								{
@@ -855,7 +1071,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}://{{domain}}:{{port}}/doctorTimeSlot/change-status/4",
+							"raw": "{{protocol}}://{{domain}}:{{port}}/doctorTimeSlot/change-status/1",
 							"protocol": "{{protocol}}",
 							"host": [
 								"{{domain}}"
@@ -864,7 +1080,7 @@
 							"path": [
 								"doctorTimeSlot",
 								"change-status",
-								"4"
+								"1"
 							]
 						}
 					},
@@ -891,6 +1107,317 @@
 							"path": [
 								"doctorTimeSlot",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Appointment",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"doctorId\": \"a47fb364-d96c-4251-a7a9-a01ad22a1a3d\",\r\n  \"reason\": \"Checkup\",\r\n  \"scheduledDate\": \"2022-12-15\",\r\n  \"scheduledTime\": \"10:00AM - 11:00AM\",\r\n  \"paymentType\": \"ONLINE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/appointment/create",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"appointment",
+								"create"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1231",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAppointmentByPatient",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "status",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n  {\r\n    \"day\": \"2022-12-15\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/appointment/?scheduleDate=2022-12-15&status=APPROVED",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"appointment",
+								""
+							],
+							"query": [
+								{
+									"key": "scheduleDate",
+									"value": "2022-12-15"
+								},
+								{
+									"key": "status",
+									"value": "APPROVED"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAppointmentByAmin",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt_token_admin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/appointment/admin/?scheduleDate=2022-12-15&status=APPROVED",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"appointment",
+								"admin",
+								""
+							],
+							"query": [
+								{
+									"key": "scheduleDate",
+									"value": "2022-12-15"
+								},
+								{
+									"key": "status",
+									"value": "APPROVED"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMyOwnAppointment",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt_token_doctor}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/appointment/",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"appointment",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changeAppointmentStatus",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt_token_admin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isPublic\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/appointment/change-status/4",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"appointment",
+								"change-status",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteDoctorTimeSlot",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{jwt_token_doctor}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/appointment/1",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"appointment",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test",
+			"item": [
+				{
+					"name": "Payment",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"hoangvyanh2013@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/checkout-session/4036de52-6687-42da-8344-543ca89ed4d8",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"checkout-session",
+								"4036de52-6687-42da-8344-543ca89ed4d8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "payment-sheet",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": 200000,\r\n  \"currency\": \"vnd\",\r\n  \"paymentMethodId\": \"pm_card_visa\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/test/payment-sheet",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"test",
+								"payment-sheet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "webhook",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{domain}}:{{port}}/webhook",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{domain}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"webhook"
 							]
 						}
 					},
