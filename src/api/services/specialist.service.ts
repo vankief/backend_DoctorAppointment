@@ -47,4 +47,22 @@ export class SpecialistService extends Repository<SpecialistEntity> {
   public async getAllSpecialists() {
     return await SpecialistEntity.find();
   }
+
+  public async getListSpecialistWithDoctors(id: string) {
+    const specialist = await SpecialistEntity.findOne(id, { relations: ['doctors'] });
+    if (!specialist) throw new HttpException(409, "Specialist doesn't exist");
+    return specialist;
+  }
+
+  public async getNumberOfDoctors() {
+    const specialists = await SpecialistEntity.find({ relations: ['doctors'] });
+    const result = specialists.map(specialist => {
+      return {
+        id: specialist.id,
+        name: specialist.name,
+        numberOfDoctors: specialist.doctors.length,
+      };
+    });
+    return result;
+  }
 }

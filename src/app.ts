@@ -19,14 +19,14 @@ export class App {
   public env: string;
   public port: string | number;
 
-  constructor(routes: Routes[]) {
+  constructor(payRoute: Routes, routes: Routes[]) {
     this.app = express();
     this.env = NODE_ENV || 'development';
     this.port = PORT || 3000;
 
     this.connectToDatabase();
     this.initializeMiddlewares();
-    this.initializeRoutes(routes);
+    this.initializeRoutes(payRoute, routes);
     this.initializeSwagger();
     this.initializeErrorHandling();
   }
@@ -55,14 +55,15 @@ export class App {
     this.app.use(hpp());
     this.app.use(helmet());
     this.app.use(compression());
-    this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
   }
 
-  private initializeRoutes(routes: Routes[]) {
+  private initializeRoutes(payRoute: Routes, routes: Routes[]) {
+    this.app.use('/', payRoute.router);
+    this.app.use(express.json());
     routes.forEach(route => {
-      this.app.use('/', route.router);
+      this.app.use('/api/v1', route.router);
     });
   }
 

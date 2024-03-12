@@ -35,5 +35,12 @@ export class SpecialistRouter implements Routes {
     );
 
     this.router.get(`${this.path}`, asyncHandler(this.specialists.getAllSpecialists));
+
+    this.router.get(
+      `${this.path}/:id/doctors`,
+      asyncHandler(this.specialists.getListSpecialistWithDoctors),
+    );
+
+    this.router.get(`${this.path}/listdoctors`, asyncHandler(this.specialists.getNumberOfDoctors));
   }
 }

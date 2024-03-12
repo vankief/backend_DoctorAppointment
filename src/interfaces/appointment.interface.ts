@@ -5,6 +5,7 @@ export interface ICreateAppointment {
   scheduledTime: string;
   scheduledDate: string;
   paymentType: string;
+  fee: number;
 }
 
 export interface Appointment {

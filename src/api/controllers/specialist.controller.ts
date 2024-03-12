@@ -52,4 +52,22 @@ export class SpecialistController {
       data: specialists,
     }).send(res);
   };
+
+  public getListSpecialistWithDoctors = async (req: Request, res: Response) => {
+    const specialistId = req.params.id;
+    const doctors = await Container.get(DoctorsService).getDoctorsBySpecialist(specialistId);
+    new OK({
+      message: 'Doctors fetched successfully',
+      data: doctors,
+    }).send(res);
+  };
+
+  public getNumberOfDoctors = async (req: Request, res: Response) => {
+    console.log('312321');
+    const specialists = await this.specialist.getNumberOfDoctors();
+    new OK({
+      message: 'Number of doctors fetched successfully',
+      data: specialists,
+    }).send(res);
+  };
 }

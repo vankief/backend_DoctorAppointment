@@ -16,7 +16,7 @@ export class AppointmentService {
   public smartCardService = new SmartCardService();
 
   public async createAppointment(data: ICreateAppointment) {
-    const { doctorId, patientId, reason, scheduledDate, scheduledTime, paymentType } = data;
+    const { doctorId, patientId, reason, scheduledDate, scheduledTime, paymentType, fee } = data;
     const doctor = await DoctorEntity.findOne(doctorId);
     const patient = await PatientEntity.findOne(patientId);
     if (!doctor) {
@@ -29,8 +29,9 @@ export class AppointmentService {
     appointment.scheduledDate = scheduledDate;
     appointment.scheduledTime = scheduledTime;
     appointment.paymentType = paymentType;
+    appointment.fee = fee;
     if (paymentType === EPaymentType.ONLINE) {
-      const paymentResult = await this.paymentService.makePayment(appointment);
+      const paymentResult = await this.paymentService.createPaymentIntent(fee, 'vnd', patientId);
       if (!paymentResult) {
         throw new HttpException(400, 'Payment failed');
       }
@@ -39,7 +40,7 @@ export class AppointmentService {
     if (paymentType === EPaymentType.SMARTCARD) {
       const smartCard = await this.smartCardService.getSmartCardByPatientId(patientId);
       if (!smartCard) {
-        throw new HttpException(400, 'Smartcard not found');
+        throw new HttpException(400, 'You do not have a smart card, please create one');
       }
       appointment.status = EStatus.AWAITING_PAYMENT;
     }

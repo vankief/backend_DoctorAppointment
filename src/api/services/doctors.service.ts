@@ -104,7 +104,9 @@ export class DoctorsService extends Repository<DoctorEntity> {
   }
 
   public async getDoctorById(doctorId: string) {
-    const doctor = await DoctorEntity.findOne(doctorId);
+    const doctor = await DoctorEntity.findOne(doctorId, {
+      relations: ['specialist'],
+    });
     if (!doctor) throw new HttpException(409, "Doctor doesn't exist");
     return doctor;
   }
@@ -158,5 +160,12 @@ export class DoctorsService extends Repository<DoctorEntity> {
       },
       data,
     };
+  }
+
+  public async getDoctorsBySpecialist(specialistId: string) {
+    const doctors = await DoctorEntity.find({
+      where: { specialistId },
+    });
+    return doctors;
   }
 }

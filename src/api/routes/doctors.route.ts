@@ -39,10 +39,6 @@ export class DoctorRouter implements Routes {
       asyncHandler(this.doctors.deleteDoctor),
     );
 
-    this.router.get(
-      `${this.path}`,
-      AuthMiddleware([Role.ADMIN]),
-      asyncHandler(this.doctors.getAllDoctors),
-    );
+    this.router.get(`${this.path}`, asyncHandler(this.doctors.getAllDoctors));
   }
 }
