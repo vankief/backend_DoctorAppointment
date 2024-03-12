@@ -14,8 +14,6 @@ export class SpecialistRouter implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/:id`, asyncHandler(this.specialists.getSpecialistById));
-
     this.router.post(
       `${this.path}`,
       AuthMiddleware([Role.ADMIN]),
@@ -34,13 +32,15 @@ export class SpecialistRouter implements Routes {
       asyncHandler(this.specialists.deleteSpecialist),
     );
 
-    this.router.get(`${this.path}`, asyncHandler(this.specialists.getAllSpecialists));
-
+    /*
+     * get method
+     */
+    this.router.get(`${this.path}/all`, asyncHandler(this.specialists.getAllSpecialists));
+    this.router.get(`${this.path}/listdoctors`, asyncHandler(this.specialists.getNumberOfDoctors));
+    this.router.get(`${this.path}/:id`, asyncHandler(this.specialists.getSpecialistById));
     this.router.get(
-      `${this.path}/:id/doctors`,
+      `${this.path}/doctors/:id`,
       asyncHandler(this.specialists.getListSpecialistWithDoctors),
     );
-
-    this.router.get(`${this.path}/listdoctors`, asyncHandler(this.specialists.getNumberOfDoctors));
   }
 }

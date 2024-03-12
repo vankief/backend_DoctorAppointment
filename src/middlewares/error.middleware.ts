@@ -37,6 +37,7 @@ export const ErrorMiddleware = (
         ? message.split(',')[0]
         : message;
 
+    console.log('error', error);
     res.status(statusResponse).json({
       status: 'error',
       statusCode: status,
