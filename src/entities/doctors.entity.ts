@@ -1,4 +1,3 @@
-import { IsNotEmpty } from 'class-validator';
 import {
   BaseEntity,
   Entity,
@@ -16,6 +15,7 @@ import { Doctor } from '@/interfaces/doctors.interface.';
 import { DoctorTimeSlotEntity } from './doctorTimeSlots.entity';
 import { AppointmentEntity } from './appointment.entity';
 import { SpecialistEntity } from './specialist.entity';
+import { ReviewEntity } from './review.entity';
 
 @Entity()
 export class DoctorEntity extends BaseEntity implements Doctor {
@@ -45,11 +45,11 @@ export class DoctorEntity extends BaseEntity implements Doctor {
   @Column() // Ngày sinh của bác sĩ
   dob: string;
 
+  @Column({ nullable: true })
+  description: string;
+
   @Column({ nullable: true }) // Giá cho dịch vụ của bác sĩ
   price: number;
-
-  @Column({ nullable: true }) // Dịch vụ mà bác sĩ cung cấp
-  services: string;
 
   @Column({ nullable: true }) // Bằng cấp của bác sĩ
   degree: string;
@@ -75,6 +75,25 @@ export class DoctorEntity extends BaseEntity implements Doctor {
   @ManyToOne(() => SpecialistEntity, specialist => specialist.doctors)
   @JoinColumn({ name: 'specialistId' })
   specialist: SpecialistEntity;
+
+  @OneToMany(() => ReviewEntity, review => review.doctor)
+  reviews: Relation<ReviewEntity[]>;
+
+  @Column({ default: 0 }) // Tổng điểm đánh giá, mặc định là 0
+  totalRating: number;
+
+  @Column({ default: 0 }) // Số lượng đánh giá, mặc định là 0
+  totalRatings: number;
+
+  @Column({ default: 4.7 }) // Điểm đánh giá trung bình, mặc định là 0
+  averageRating: number;
+
+  // Hàm cập nhật điểm đánh giá khi có đánh giá mới
+  updateRating(newRating: number) {
+    this.totalRating += newRating;
+    this.totalRatings += 1;
+    this.averageRating = this.totalRating / this.totalRatings;
+  }
 
   @Column()
   @CreateDateColumn() // Ngày tạo bản ghi

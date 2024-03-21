@@ -1,6 +1,8 @@
 import { Role } from '@/constants';
 import { AuthEntity } from '@/entities/auths.entity';
 import { DoctorEntity } from '@/entities/doctors.entity';
+import DoctorRepo from '@/entities/repo/doctor.repo';
+import DoctorTimeSlotRepo from '@/entities/repo/doctorTimeSlot.repo';
 import { SpecialistEntity } from '@/entities/specialist.entity';
 import { HttpException } from '@/helpers/exceptions/httpException';
 import { IGenericResponse } from '@/interfaces/auths.interface';
@@ -9,12 +11,15 @@ import {
   DoctorSearchableFields,
   ICreateDoctor,
   IDoctorFilters,
+  IGetListDoctorTimeSlot,
   IUpdateDoctor,
 } from '@/interfaces/doctors.interface.';
 import { convertDate } from '@/utils';
+import getDataInfo from '@/utils/getDataInfo';
 import calculatePagination, { IOption } from '@/utils/paginationHelper';
 import { unPick } from '@/utils/pick';
 import { hash } from 'bcrypt';
+import moment from 'moment';
 import { Service } from 'typedi';
 import { EntityManager, EntityRepository, Repository, getManager } from 'typeorm';
 
@@ -30,7 +35,6 @@ export class DoctorsService extends Repository<DoctorEntity> {
 
     const newPayload = {
       ...payload,
-      services: JSON.stringify(payload.services),
       degree: JSON.stringify(payload.degree),
       college: JSON.stringify(payload.college),
       experience: JSON.stringify(payload.experience),
@@ -64,7 +68,6 @@ export class DoctorsService extends Repository<DoctorEntity> {
 
     const newPayload = {
       ...payload,
-      services: JSON.stringify(payload.services),
       degree: JSON.stringify(payload.degree),
       college: JSON.stringify(payload.college),
       experience: JSON.stringify(payload.experience),
@@ -167,5 +170,45 @@ export class DoctorsService extends Repository<DoctorEntity> {
       where: { specialistId },
     });
     return doctors;
+  }
+
+  public async getTopDoctor() {
+    const doctors = await DoctorEntity.find({
+      order: {
+        averageRating: 'DESC',
+      },
+      take: 15,
+      relations: ['specialist'],
+    });
+    const topDoctors = doctors.map(doctor => {
+      return {
+        id: doctor.id,
+        img: doctor.img,
+        name: doctor.name,
+        specialist: doctor.specialist.name,
+      };
+    });
+
+    return topDoctors;
+  }
+
+  public async getDoctorByPatient(doctorId: string) {
+    const doctor = await DoctorEntity.findOne(doctorId, {
+      relations: ['specialist'],
+    });
+    if (!doctor) throw new HttpException(409, "Doctor doesn't exist");
+    const result = {
+      id: doctor.id,
+      name: doctor.name,
+      img: doctor.img,
+      specialist: doctor.specialist.name, // Tên chuyên khoa
+      averageRating: doctor.averageRating, // Điểm đánh giá trung bình
+      totalRatings: doctor.totalRatings, // Tổng số lượt đánh giá
+      totalPatients: doctor.appointments ? doctor.appointments.length : 0, // Số lượt bệnh nhân đã khám
+      totalReviews: doctor.reviews ? doctor.reviews.length : 0, // Tổng số lượt đánh giá
+      experience: doctor.experience, // Kinh nghiệm
+      description: doctor.description, // Mô tả
+    };
+    return result;
   }
 }

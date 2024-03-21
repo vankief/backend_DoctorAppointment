@@ -23,7 +23,7 @@ export class SpecialistService extends Repository<SpecialistEntity> {
   }
 
   public async updateSpecialist(id: string, payload: Partial<SpecialistEntity>) {
-    const newPayload = unPick(payload, ['id', 'name']);
+    const newPayload = unPick(payload, ['id']);
 
     const specialist = await SpecialistEntity.findOne(id);
 

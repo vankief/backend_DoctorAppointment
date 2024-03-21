@@ -63,7 +63,7 @@ export class App {
     this.app.use('/', payRoute.router);
     this.app.use(express.json());
     routes.forEach(route => {
-      this.app.use('/api/v1', route.router);
+      this.app.use('/', route.router);
     });
   }
 

@@ -8,9 +8,11 @@ import {
   UpdateDateColumn,
   OneToMany,
   Relation,
+  OneToOne,
 } from 'typeorm';
 import { Patient } from '@/interfaces/patients.interface';
 import { AppointmentEntity } from './appointment.entity';
+import { ReviewEntity } from './review.entity';
 
 @Entity()
 export class PatientEntity extends BaseEntity implements Patient {
@@ -42,6 +44,9 @@ export class PatientEntity extends BaseEntity implements Patient {
 
   @OneToMany(() => AppointmentEntity, appointment => appointment.patient)
   appointments: Relation<AppointmentEntity[]>;
+
+  @OneToOne(() => ReviewEntity, review => review.patient)
+  review: ReviewEntity;
 
   @Column()
   @CreateDateColumn()

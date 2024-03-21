@@ -4,7 +4,7 @@ import { PaymentService } from '../services/payment.service';
 import { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from '@/config';
 const stripe = require('stripe')(STRIPE_SECRET_KEY);
 export class TestRouter implements Routes {
-  public path = '';
+  public path = '/test';
   public router = Router();
   public payment = new PaymentService();
 
@@ -16,7 +16,7 @@ export class TestRouter implements Routes {
       res.send('Hello World!');
     });
 
-    this.router.post(`${this.path}/payment-sheet`, express.json(), async (req, res) => {
+    this.router.post(`/payment-sheet`, express.json(), async (req, res) => {
       console.log('🚀 ~ TestRouter ~ this.router.post ~ req:', req.body);
       const amount = req.body.amount;
       console.log('🚀 ~ TestRouter ~ this.router.post ~ amount:', amount);

@@ -2,6 +2,7 @@ import Container from 'typedi';
 import { PatientService } from '../services/patients.service';
 import { Request, Response } from 'express';
 import { OK } from '@/helpers/valid_response/success.response';
+import { RequestWithUser } from '@/interfaces/auths.interface';
 
 export class PatientController {
   public patient = Container.get(PatientService);
@@ -13,8 +14,9 @@ export class PatientController {
       data: tokens,
     }).send(res);
   };
-  public updatePatient = async (req: Request, res: Response) => {
-    const patient = await this.patient.updatePatient(req.params.id, req.body);
+  public updatePatient = async (req: RequestWithUser, res: Response) => {
+    const patientId = req.user.userId;
+    const patient = await this.patient.updatePatient(patientId, req.body);
     new OK({
       message: 'Patient updated successfully',
       data: patient,

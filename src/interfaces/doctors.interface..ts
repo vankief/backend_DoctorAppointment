@@ -1,3 +1,4 @@
+import { Service } from '@/constants';
 import { DoctorEntity } from '@/entities/doctors.entity';
 import { ScheduleDayEntity } from '@/entities/scheduleDay.entity';
 
@@ -10,7 +11,6 @@ export interface Doctor {
   gender: boolean;
   dob: string;
   price?: number;
-  services: string; // dịch vụ
   degree: string; //bằng cấp
   college: string;
   experience: string; // kinh nghiệm
@@ -27,7 +27,6 @@ export interface ICreateDoctor {
   dob: string;
   specialistId: string;
   price?: number;
-  services?: string;
   degree?: string;
   college?: string;
   experience?: string;
@@ -60,6 +59,7 @@ export interface IListTime {
 export interface ICreateTimeSlot {
   doctorId: string;
   day: string;
+  service: Service;
   listTime: IListTime[];
 }
 export interface DoctorTimeSlot {

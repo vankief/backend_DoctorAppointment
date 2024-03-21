@@ -53,4 +53,21 @@ export class DoctorsController {
       data: doctors,
     }).send(res);
   };
+
+  public getTopDoctor = async (req: Request, res: Response) => {
+    const doctors = await this.doctor.getTopDoctor();
+    new OK({
+      message: 'Doctors retrieved successfully',
+      data: doctors,
+    }).send(res);
+  };
+
+  public getDoctorByPatient = async (req: Request, res: Response) => {
+    const doctorId = req.params.id;
+    const doctor = await this.doctor.getDoctorByPatient(doctorId);
+    new OK({
+      message: 'Doctor retrieved successfully',
+      data: doctor,
+    }).send(res);
+  };
 }

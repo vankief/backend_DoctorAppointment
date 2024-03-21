@@ -17,8 +17,6 @@ export class DoctorRouter implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/:id`, asyncHandler(this.doctors.getDoctorById));
-
     this.router.post(
       `${this.path}`,
       AuthMiddleware([Role.ADMIN]),
@@ -39,6 +37,12 @@ export class DoctorRouter implements Routes {
       asyncHandler(this.doctors.deleteDoctor),
     );
 
+    this.router.get(`${this.path}/top`, asyncHandler(this.doctors.getTopDoctor));
+
     this.router.get(`${this.path}`, asyncHandler(this.doctors.getAllDoctors));
+
+    this.router.get(`${this.path}/profile/:id`, asyncHandler(this.doctors.getDoctorById));
+
+    this.router.get(`${this.path}/:id`, asyncHandler(this.doctors.getDoctorByPatient));
   }
 }
