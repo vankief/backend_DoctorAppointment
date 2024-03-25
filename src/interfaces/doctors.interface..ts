@@ -52,6 +52,7 @@ export interface IUpdateDoctor {
 }
 
 export interface IListTime {
+  service: Service;
   timeSlot: string;
   maximumPatient: number;
 }
@@ -59,7 +60,6 @@ export interface IListTime {
 export interface ICreateTimeSlot {
   doctorId: string;
   day: string;
-  service: Service;
   listTime: IListTime[];
 }
 export interface DoctorTimeSlot {

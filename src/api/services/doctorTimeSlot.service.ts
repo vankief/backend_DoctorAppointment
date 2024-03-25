@@ -41,6 +41,7 @@ export class DoctorTimeSlotService {
 
     const listTimeInDB: IListTime[] = isCreate.listTime.map(item => {
       return {
+        service: item.service,
         timeSlot: item.timeSlot,
         maximumPatient: item.maximumPatient,
       };
@@ -99,10 +100,21 @@ export class DoctorTimeSlotService {
       day: day,
       isPublic: true,
     };
-    return DoctorTimeSlotRepo.getDoctorTimeSlot({
+    const result = await DoctorTimeSlotRepo.getDoctorTimeSlot({
       doctorId,
       filter,
     });
+    const listTime = result.map(item => item.listTime);
+    return listTime.flatMap(item =>
+      item.map(time => {
+        return {
+          id: time.id,
+          timeSlot: time.timeSlot,
+          service: time.service,
+          maximumPatient: time.maximumPatient,
+        };
+      }),
+    );
   }
 
   public async getMyOwnTimeSlots({ doctorId, day }: IGetListDoctorTimeSlot) {

@@ -12,11 +12,6 @@ export enum ListTime {
   T6 = '3:30PM - 4:30PM',
 }
 
-export enum Service {
-  ONLINE = 'online',
-  OFFLINE = 'offline',
-}
-
 export enum EListTime {
   T1 = 'T1',
   T2 = 'T2',
@@ -25,7 +20,10 @@ export enum EListTime {
   T5 = 'T5',
   T6 = 'T6',
 }
-
+export enum Service {
+  ONLINE = 'online',
+  OFFLINE = 'offline',
+}
 export enum EStatus {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',

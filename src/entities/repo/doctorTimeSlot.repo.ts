@@ -1,7 +1,7 @@
 import { IListTime } from '@/interfaces/doctors.interface.';
 import { DoctorTimeSlotEntity } from '../doctorTimeSlots.entity';
 import { ScheduleDayEntity } from '../scheduleDay.entity';
-import { EListTime } from '@/constants';
+import { EListTime, Service } from '@/constants';
 import { DoctorEntity } from '../doctors.entity';
 import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 
@@ -27,6 +27,7 @@ export default class DoctorTimeSlotRepo {
     const scheduleDays = await Promise.all(
       listTime.map(async item => {
         const scheduleDay = ScheduleDayEntity.create({
+          service: Service[item.service],
           timeSlot: EListTime[item.timeSlot],
           maximumPatient: item.maximumPatient,
         });
@@ -58,6 +59,7 @@ export default class DoctorTimeSlotRepo {
     const scheduleDays = await Promise.all(
       listTime.map(async item => {
         const scheduleDay = ScheduleDayEntity.create({
+          service: Service[item.service],
           timeSlot: EListTime[item.timeSlot],
           maximumPatient: item.maximumPatient,
         });
