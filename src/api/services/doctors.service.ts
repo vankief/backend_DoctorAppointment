@@ -211,4 +211,13 @@ export class DoctorsService extends Repository<DoctorEntity> {
     };
     return result;
   }
+
+  public async getDoctorPrice(doctorId: string) {
+    const doctor = await DoctorEntity.findOne(doctorId);
+    if (!doctor) throw new HttpException(409, "Doctor doesn't exist");
+    return {
+      id: doctor.id,
+      price: doctor.price,
+    };
+  }
 }

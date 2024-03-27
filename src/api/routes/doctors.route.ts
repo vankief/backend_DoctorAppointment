@@ -43,6 +43,8 @@ export class DoctorRouter implements Routes {
 
     this.router.get(`${this.path}/profile/:id`, asyncHandler(this.doctors.getDoctorById));
 
+    this.router.get(`${this.path}/price/:id`, asyncHandler(this.doctors.getDoctorPrice));
+
     this.router.get(`${this.path}/:id`, asyncHandler(this.doctors.getDoctorByPatient));
   }
 }

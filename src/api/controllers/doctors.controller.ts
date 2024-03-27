@@ -70,4 +70,13 @@ export class DoctorsController {
       data: doctor,
     }).send(res);
   };
+
+  public getDoctorPrice = async (req: Request, res: Response) => {
+    const doctorId = req.params.id;
+    const doctor = await this.doctor.getDoctorPrice(doctorId);
+    new OK({
+      message: 'Doctor price retrieved successfully',
+      data: doctor,
+    }).send(res);
+  };
 }
