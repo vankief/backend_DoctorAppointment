@@ -6,11 +6,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { PatientEntity } from './patient.entity';
 import { DoctorEntity } from './doctors.entity';
+import { PaymentDetailEntity } from './paymentDetail.entity';
+import { EPaymentType } from '@/constants';
 
 @Entity()
 export class AppointmentEntity extends BaseEntity implements Appointment {
@@ -25,23 +28,46 @@ export class AppointmentEntity extends BaseEntity implements Appointment {
   @JoinColumn({ name: 'doctorId' })
   doctor: DoctorEntity;
 
+  @OneToOne(() => PaymentDetailEntity, paymentDetail => paymentDetail.appointment)
+  @JoinColumn({ name: 'paymentDetailId' })
+  paymentDetail: PaymentDetailEntity;
+
+  @Column()
+  patientName: String;
+
+  @Column()
+  patientPhone: String;
+
+  @Column()
+  patientAge: String;
+
+  @Column()
+  patientGender: Boolean;
+
   @Column()
   fee: number;
 
   @Column()
-  reason: string;
+  reason: String;
 
   @Column()
-  scheduledTime: string;
+  scheduledTime: String;
 
   @Column()
-  scheduledDate: string;
+  scheduledDate: String;
 
   @Column()
-  paymentType: string;
+  service: String;
+
+  @Column({
+    type: 'enum',
+    enum: EPaymentType,
+    default: EPaymentType.SMARTCARD,
+  })
+  paymentType: EPaymentType;
 
   @Column()
-  status: string;
+  status: String;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -1,8 +1,39 @@
-import { IGetListAppointment } from '@/interfaces/appointment.interface';
+import { ICreateAppointment, IGetListAppointment } from '@/interfaces/appointment.interface';
 import { AppointmentEntity } from '../appointment.entity';
-import { EStatus } from '@/constants';
+import { EPaymentType, EService, EStatus } from '@/constants';
+import { DoctorEntity } from '../doctors.entity';
+import { PatientEntity } from '../patient.entity';
+import { getManager } from 'typeorm';
+import PaymentDetailRepo from './paymentDetail.repo';
 
 export default class AppointmentRepo {
+  public static async createAppointment({
+    doctor,
+    patient,
+    data,
+  }: {
+    doctor: DoctorEntity;
+    patient: PatientEntity;
+    data: ICreateAppointment;
+  }) {
+    const appointment = new AppointmentEntity();
+    appointment.doctor = doctor;
+    appointment.patient = patient;
+    appointment.reason = data.reason;
+    appointment.scheduledTime = data.scheduledTime;
+    appointment.scheduledDate = data.scheduledDate;
+    appointment.status = EStatus.AWAITING_PAYMENT;
+    appointment.fee = data.fee;
+    appointment.service = data.service;
+    appointment.patientName = data.patientName;
+    appointment.patientPhone = data.patientPhone;
+    appointment.patientAge = data.patientAge;
+    appointment.patientGender = data.patientGender;
+    appointment.paymentType =
+      data.service === EService.ONLINE ? EPaymentType.ONLINE : EPaymentType.SMARTCARD;
+    await AppointmentEntity.save(appointment);
+    return appointment;
+  }
   public static async getAppointmentById(id: string) {
     const appointment = await AppointmentEntity.findOne({
       where: { id },

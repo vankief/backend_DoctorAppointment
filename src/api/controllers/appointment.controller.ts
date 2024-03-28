@@ -2,7 +2,6 @@ import { OK } from '@/helpers/valid_response/success.response';
 import { Request, Response } from 'express';
 import { AppointmentService } from '../services/appointment.service';
 import { RequestWithUser } from '@/interfaces/auths.interface';
-import { ICreateAppointment } from '@/interfaces/appointment.interface';
 import { EStatus } from '@/constants';
 
 export class AppointmentController {
@@ -10,12 +9,9 @@ export class AppointmentController {
 
   public createAppointment = async (req: RequestWithUser, res: Response) => {
     const patientId = req.user.userId;
-    const data = {
-      ...req.body,
-      patientId,
-    } as ICreateAppointment;
-    const appointment = await this.appointment.createAppointment(data);
-    new OK({ message: 'Appointment created successfully', data: appointment }).send(res);
+    const { doctorId, ...data } = req.body;
+    const paymentData = await this.appointment.createAppointment({ patientId, doctorId, data });
+    new OK({ message: 'Appointment created successfully', data: paymentData }).send(res);
   };
 
   public deleteAppointment = async (req: RequestWithUser, res: Response) => {

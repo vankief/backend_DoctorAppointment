@@ -1,21 +1,28 @@
 export interface ICreateAppointment {
-  patientId: string;
-  doctorId: string;
   reason: string;
   scheduledTime: string;
   scheduledDate: string;
-  paymentType: string;
   fee: number;
+  patientName: String;
+  patientPhone: String;
+  patientAge: String;
+  patientGender: Boolean;
+  service: String;
 }
 
 export interface Appointment {
   id?: string;
-  reason: string;
-  scheduledTime: string;
-  scheduledDate: string;
-  paymentType: string;
-  status: string;
+  patientName: String;
+  patientPhone: String;
+  patientAge: String;
+  patientGender: Boolean;
   fee: number;
+  reason: String;
+  scheduledTime: String;
+  scheduledDate: String;
+  service: String;
+  paymentType: String;
+  status: String;
 }
 
 export interface IGetListAppointment {

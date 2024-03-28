@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { DoctorTimeSlotEntity } from './doctorTimeSlots.entity';
-import { EListTime, Service } from '@/constants';
+import { EListTime, EService } from '@/constants';
 
 @Entity()
 export class ScheduleDayEntity extends BaseEntity {
@@ -23,9 +23,9 @@ export class ScheduleDayEntity extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: Service,
+    enum: EService,
   })
-  service: Service;
+  service: EService;
 
   @Column({
     type: 'enum',

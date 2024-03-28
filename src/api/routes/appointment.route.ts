@@ -1,19 +1,11 @@
 import { CreateAppointmentDto } from '@/dtos/appointment.dto';
-
 import { Routes } from '@/interfaces/routes.interface';
-
 import { ValidationMiddleware } from '@/middlewares/validation.middleware';
-
 import asyncHandler from '@/utils/asyncHandler';
-
 import { Router } from 'express';
-
 import { AppointmentController } from '../controllers/appointment.controller';
-
 import { AuthMiddleware } from '@/middlewares/auth.middleware';
-
 import { Role } from '@/constants';
-
 export class AppointmentRoute implements Routes {
   public path = '/appointment';
 
@@ -29,7 +21,6 @@ export class AppointmentRoute implements Routes {
     this.router.post(
       `${this.path}/create`,
       AuthMiddleware([Role.PATIENT]),
-      ValidationMiddleware(CreateAppointmentDto),
       asyncHandler(this.appointmentController.createAppointment),
     );
 

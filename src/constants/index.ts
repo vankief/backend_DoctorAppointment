@@ -20,12 +20,11 @@ export enum EListTime {
   T5 = 'T5',
   T6 = 'T6',
 }
-export enum Service {
+export enum EService {
   ONLINE = 'online',
   OFFLINE = 'offline',
 }
 export enum EStatus {
-  PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
   CANCELLED = 'CANCELLED',
@@ -36,4 +35,10 @@ export enum EStatus {
 export enum EPaymentType {
   ONLINE = 'ONLINE',
   SMARTCARD = 'SMARTCARD',
+}
+
+export enum EPaymentStatus {
+  PENDING = 'PENDING',
+  SUCCESS = 'SUCCESS',
+  FAILED = 'FAILED',
 }

@@ -5,46 +5,36 @@ import { HttpException } from '@/helpers/exceptions/httpException';
 import { ICreateAppointment, IGetAppointmentByAdmin } from '@/interfaces/appointment.interface';
 import { Service } from 'typedi';
 import { EntityRepository } from 'typeorm';
-import { PaymentService } from './payment.service';
-import { SmartCardService } from './smartcard.service';
-import { EPaymentType, EStatus } from '@/constants';
+import { EStatus } from '@/constants';
 import AppointmentRepo from '@/entities/repo/appointment.repo';
+import PaymentDetailRepo from '@/entities/repo/paymentDetail.repo';
 @Service()
 @EntityRepository()
 export class AppointmentService {
-  public paymentService = new PaymentService();
-  public smartCardService = new SmartCardService();
-
-  public async createAppointment(data: ICreateAppointment) {
-    const { doctorId, patientId, reason, scheduledDate, scheduledTime, paymentType, fee } = data;
+  public async createAppointment({
+    patientId,
+    doctorId,
+    data,
+  }: {
+    patientId: string;
+    doctorId: string;
+    data: ICreateAppointment;
+  }) {
     const doctor = await DoctorEntity.findOne(doctorId);
     const patient = await PatientEntity.findOne(patientId);
     if (!doctor) {
       throw new HttpException(400, 'Doctor not found');
     }
-    const appointment = new AppointmentEntity();
-    appointment.doctor = doctor;
-    appointment.patient = patient;
-    appointment.reason = reason;
-    appointment.scheduledDate = scheduledDate;
-    appointment.scheduledTime = scheduledTime;
-    appointment.paymentType = paymentType;
-    appointment.fee = fee;
-    if (paymentType === EPaymentType.ONLINE) {
-      const paymentResult = await this.paymentService.createPaymentIntent(fee, 'vnd', patientId);
-      if (!paymentResult) {
-        throw new HttpException(400, 'Payment failed');
-      }
-      appointment.status = EStatus.APPROVED;
+    const appointment = await AppointmentRepo.createAppointment({
+      doctor,
+      patient,
+      data,
+    });
+    if (!appointment) {
+      throw new HttpException(400, 'Appointment not created');
     }
-    if (paymentType === EPaymentType.SMARTCARD) {
-      const smartCard = await this.smartCardService.getSmartCardByPatientId(patientId);
-      if (!smartCard) {
-        throw new HttpException(400, 'You do not have a smart card, please create one');
-      }
-      appointment.status = EStatus.AWAITING_PAYMENT;
-    }
-    return await appointment.save();
+    const paymentInfo = await PaymentDetailRepo.createPaymentInfo(appointment);
+    return paymentInfo;
   }
 
   public async getAppointmentById(id: string) {
@@ -57,13 +47,12 @@ export class AppointmentService {
     }
     return appointment;
   }
-  public async updateStatus(id: string, status: string) {
+  public async updateStatus(id: string, status: EStatus) {
     const appointment = await AppointmentEntity.findOne(id);
     if (!appointment) {
       throw new HttpException(400, 'Appointment not found');
     }
-    appointment.status = status;
-    return await appointment.save();
+    return await AppointmentEntity.update(id, { status });
   }
 
   public async getAppointmentByAdmin({
